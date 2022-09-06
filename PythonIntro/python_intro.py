@@ -11,6 +11,7 @@ def sphere_volume(r):
     """ Return the volume of the sphere of radius 'r'.
     Use 3.14159 for pi in your computation.
     """
+    # Calculate and return the volume of a sphere => 4/3 * pi * r^2
     return (4 / 3) * 3.14159 * r**3
 
 
@@ -19,7 +20,9 @@ def isolate(a, b, c, d, e):
     """ Print the arguments separated by spaces, but print 5 spaces on either
     side of b.
     """
+    # Print arguments separated by 5 spaces between a, b, and c then a normal space after c
     print(a, b, c, sep='     ', end=' ')
+    # Print d and e with a space separating them.
     print(d, e, sep=' ')
 
 
