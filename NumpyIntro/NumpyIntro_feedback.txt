@@ -1,0 +1,12 @@
+09/12/22 19:00
+
+SyntaxError while loading 'numpy_intro.py': unexpected EOF while parsing (numpy_intro.py, line 138)
+
+-------------------------------------------------------------------------------
+
+09/12/22 19:08
+
+SyntaxError while loading 'numpy_intro.py': unexpected EOF while parsing (numpy_intro.py, line 138)
+
+-------------------------------------------------------------------------------
+
