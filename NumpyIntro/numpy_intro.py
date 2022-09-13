@@ -121,18 +121,18 @@ def prob7():
     max_horizontal = np.max(grid[:, :-3] * grid[:, 1:-2] * grid[:, 2:-1] * grid[:, 3:])
     max_vertical = np.max(grid[:-3, :] * grid[1:-2, :] * grid[2:-1, :] * grid[3:, :])
     max_diagonal_up_left = np.max(grid[:-3, :-3] * grid[1:-2, 1:-2] * grid[2:-1, 2:-1] * grid[3:, 3:])
-    max_diagonal_up_right = np.max(grid[:-3, 3:] * grid[1:-2, 2:-1] * grid[2:-1, 1:-2] * grid[3:, :-3])
+    max_diagonal_up_right = np.max(grid[:- 3, 3:] * grid[1:-2, 2:-1] * grid[2:-1, 1:-2] * grid[3:, :-3])
 
     # Return the max of the maxes
     return max(max_horizontal, max_vertical, max_diagonal_up_left, max_diagonal_up_right)
 
 
 if __name__ == "__main__":
-    # print(prob1())
-    # print(prob2())
-    # print(prob3())
-    # print(prob4(np.array([-3, -1, 3])))
-    # print(prob5())
-    # print(prob6(np.array([[1,1,0],[0,1,0],[1,1,1]])))
-    # print(prob7())
+    print(prob1())
+    print(prob2())
+    print(prob3())
+    print(prob4(np.array([-3, -1, 3])))
+    print(prob5())
+    print(prob6(np.array([[1,1,0],[0,1,0],[1,1,1]])))
+    print(prob7())
 
