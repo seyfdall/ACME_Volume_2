@@ -10,3 +10,35 @@ SyntaxError while loading 'numpy_intro.py': unexpected EOF while parsing (numpy_
 
 -------------------------------------------------------------------------------
 
+09/15/22 10:39
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (5 points):
+Score += 5
+
+Problem 4 (5 points):
+Score += 2
+
+Problem 5 (5 points):
+Score += 5
+
+Problem 6 (10 points):
+Score += 10
+
+Problem 7 (10 points):
+Score += 10
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 47/50 = 94.0%
+
+Great job!
+
+-------------------------------------------------------------------------------
+
