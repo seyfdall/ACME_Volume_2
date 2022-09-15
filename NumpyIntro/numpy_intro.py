@@ -36,10 +36,10 @@ def prob3():
     """
     # Initialize matrices
     A = np.triu(np.ones((7, 7)))
-    B = -np.tril(np.ones((7, 7))) + 5 * np.triu(np.ones((7, 7))) - 5 * np.diag(np.ones((7, 7)))
+    B = -np.tril(np.ones((7, 7))) + 5 * np.triu(np.ones((7, 7))) - np.diag([5,5,5,5,5,5,5])
 
     # Calculate matrix product
-    ret_mat = np.dot(A, np.dot(B, A))
+    ret_mat = A @ B @ A
 
     # Change data type to np.int64 and return the new matrix
     typed_ret_mat = ret_mat.astype(np.int64)
