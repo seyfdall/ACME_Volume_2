@@ -1,9 +1,12 @@
 # specs.py
 """Python Essentials: Unit Testing.
-<Name>
-<Class>
-<Date>
+<Name> Dallin Seyfried
+<Class> Math 321
+<Date> 9/22/2022
 """
+
+from itertools import combinations
+
 
 def add(a, b):
     """Add two numbers."""
@@ -20,7 +23,7 @@ def divide(a, b):
 def smallest_factor(n):
     """Return the smallest prime factor of the positive integer n."""
     if n == 1: return 1
-    for i in range(2, int(n**.5)):
+    for i in range(2, int(n**.5 + 1)): # Corrected problem by adding 1 to the truncated total
         if n % i == 0: return i
     return n
 
@@ -93,11 +96,15 @@ class Fraction(object):
             return float(self) == other
 
     def __add__(self, other):
-        return Fraction(self.numer*other.numer + self.denom*other.denom,
+        # Problem found here
+        return Fraction(self.denom*other.numer + self.numer*other.denom,
                                                         self.denom*other.denom)
+
     def __sub__(self, other):
-        return Fraction(self.numer*other.numer - self.denom*other.denom,
+        # Problem found here
+        return Fraction(self.numer*other.denom - self.denom*other.numer,
                                                         self.denom*other.denom)
+
     def __mul__(self, other):
         return Fraction(self.numer*other.numer, self.denom*other.denom)
 
@@ -123,7 +130,12 @@ def count_sets(cards):
             - one or more cards does not have exactly 4 digits, or
             - one or more cards has a character other than 0, 1, or 2.
     """
-    raise NotImplementedError("Problem 6 Incomplete")
+    total_sets = 0
+    for three_cards in list(combinations(cards, 3)):
+        if is_set(three_cards[0], three_cards[1], three_cards[2]):
+            total_sets += 1
+    return total_sets
+
 
 def is_set(a, b, c):
     """Determine if the cards a, b, and c constitute a set.
@@ -136,4 +148,7 @@ def is_set(a, b, c):
             and c are either the same or all different for i=1,2,3,4.
         False if a, b, and c do not form a set.
     """
-    raise NotImplementedError("Problem 6 Incomplete")
+    for i in range(4):
+        if (int(a[i]) + int(b[i]) + int(c[i])) % 3 != 0:
+            return False
+    return True
