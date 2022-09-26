@@ -1,0 +1,26 @@
+09/26/22 17:35
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 4 (10 points):
+Score += 10
+
+Problem 6 (10 points):
+count_sets() failed to raise a ValueError (no Exception raised)
+count_sets() failed to raise a ValueError (no Exception raised)
+count_sets() failed to raise a ValueError (no Exception raised)
+count_sets() failed to raise a ValueError (no Exception raised)
+Score += 8
+
+Coverage (20 points):
+Score += 20
+
+Code Quality (5 points):
+Add comments to your code!
+Score += 0
+
+Total score: 43/50 = 86.0%
+
+-------------------------------------------------------------------------------
+
