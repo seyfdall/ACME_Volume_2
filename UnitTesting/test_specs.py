@@ -144,8 +144,37 @@ def test_fraction_truediv(set_up_fractions):
 # Problem 5: Write test cases for Set.
 def test_count_sets():
     """Function to test the count sets function"""
-    assert specs.count_sets(["1022", "1111", "1200"]) == 1
-    assert specs.count_sets(["1000", "2000", "0111"]) == 0
+    # Test a good hand
+    assert specs.count_sets(["1022", "1111", "1200", "0010",
+                             "2201", "2111", "0020", "0000",
+                            "1102", "0210", "2110", "1020"]) == 4
+    # Test invalid amount of cards
+    with pytest.raises(ValueError) as excinfo:
+        specs.count_sets(["1000", "2000", "0111"])
+    assert excinfo.value.args[0] == "There are not exactly 12 cards"
+
+    # Test non digit input
+    with pytest.raises(ValueError) as excinfo:
+        specs.count_sets(["102a", "1111", "1200", "0010",
+                          "2201", "2111", "0020", "0000",
+                          "1102", "0210", "2110", "1020"])
+    assert excinfo.value.args[0] == "One or more cards has a character other than 0, 1, or 2"
+
+    # Test invalid length of cards
+    with pytest.raises(ValueError) as excinfo:
+        specs.count_sets(["10234", "1111", "1200", "0010",
+                          "2201", "2111", "0020", "0000",
+                          "1102", "0210", "2110", "1020"])
+    assert excinfo.value.args[0] == "One or more cards does not have exactly 4 digits"
+
+    # Test uniqueness
+    with pytest.raises(ValueError) as excinfo:
+        specs.count_sets(["1023", "1023", "1200", "0010",
+                          "2201", "2111", "0020", "0000",
+                          "1102", "0210", "2110", "1020"])
+    assert excinfo.value.args[0] == "The cards are not all unique"
+
+    # Test another good hand
     assert specs.count_sets(["1022", "1122", "0100", "2021",
                             "0010", "2201", "2111", "0020",
                             "1102", "0210", "2110", "1020"]) == 6
