@@ -36,6 +36,7 @@ def month_length(month, leap_year=False):
     elif month in {"January", "March", "May", "July",
                         "August", "October", "December"}:
         return 31
+    # Edge cases for February
     if month == "February":
         if not leap_year:
             return 28
@@ -67,11 +68,13 @@ def operate(a, b, oper):
 class Fraction(object):
     """Reduced fraction class with integer numerator and denominator."""
     def __init__(self, numerator, denominator):
+        """Constructor to initialize numerator and denominator"""
         if denominator == 0:
             raise ZeroDivisionError("denominator cannot be zero")
         elif type(numerator) is not int or type(denominator) is not int:
             raise TypeError("numerator and denominator must be integers")
 
+        # Function to calculate gcd
         def gcd(a,b):
             while b != 0:
                 a, b = b, a % b
@@ -81,34 +84,41 @@ class Fraction(object):
         self.denom = denominator // common_factor
 
     def __str__(self):
+        """Magic function to return a formated string describing the fraction"""
         if self.denom != 1:
             return "{}/{}".format(self.numer, self.denom)
         else:
             return str(self.numer)
 
     def __float__(self):
+        """Magic function to return the floating point value of the fraction"""
         return self.numer / self.denom
 
     def __eq__(self, other):
+        """Magic function to do equality"""
         if type(other) is Fraction:
             return self.numer==other.numer and self.denom==other.denom
         else:
             return float(self) == other
 
     def __add__(self, other):
+        """Magic function to do addition"""
         # Problem found here
         return Fraction(self.denom*other.numer + self.numer*other.denom,
                                                         self.denom*other.denom)
 
     def __sub__(self, other):
+        """Magic function to do subtraction"""
         # Problem found here
         return Fraction(self.numer*other.denom - self.denom*other.numer,
                                                         self.denom*other.denom)
 
     def __mul__(self, other):
+        """Magic function to do multiplication"""
         return Fraction(self.numer*other.numer, self.denom*other.denom)
 
     def __truediv__(self, other):
+        """Magic function to do division"""
         if self.denom*other.numer == 0:
             raise ZeroDivisionError("cannot divide by zero")
         return Fraction(self.numer*other.denom, self.denom*other.numer)
@@ -130,6 +140,29 @@ def count_sets(cards):
             - one or more cards does not have exactly 4 digits, or
             - one or more cards has a character other than 0, 1, or 2.
     """
+
+    # Checking to see if there are 12 cards
+    if len(cards) != 12:
+        raise ValueError("There are not exactly 12 cards")
+
+    # Checking uniqueness in the hand
+    for card1 in cards:
+        count = 0
+        for card2 in cards:
+            if card1 == card2:
+                count += 1
+            if count > 1:
+                raise ValueError("The cards are not all unique")
+
+    # Check to make sure each card has 4 digits and each digit is either 0, 1, or 2
+    for card in cards:
+        if len(card) != 4:
+            raise ValueError("One or more cards does not have exactly 4 digits")
+        for i in range(len(card)):
+            if card[i] not in ['0', '1', '2']:
+                raise ValueError("One or more cards has a character other than 0, 1, or 2")
+
+    # Calculate total sets using the helper function is_set
     total_sets = 0
     for three_cards in list(combinations(cards, 3)):
         if is_set(three_cards[0], three_cards[1], three_cards[2]):
@@ -148,6 +181,7 @@ def is_set(a, b, c):
             and c are either the same or all different for i=1,2,3,4.
         False if a, b, and c do not form a set.
     """
+    # Cycle through each digit in each card and make sure they meet requirements
     for i in range(4):
         if (int(a[i]) + int(b[i]) + int(c[i])) % 3 != 0:
             return False

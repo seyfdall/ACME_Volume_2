@@ -10,12 +10,14 @@ import pytest
 
 
 def test_add():
+    """Function to test the addition function for fraction"""
     assert specs.add(1, 3) == 4, "failed on positive integers"
     assert specs.add(-5, -7) == -12, "failed on negative integers"
     assert specs.add(-6, 14) == 8
 
 
 def test_divide():
+    """Function to test division function for fraction"""
     assert specs.divide(4,2) == 2, "integer division"
     assert specs.divide(5,4) == 1.25, "float division"
     with pytest.raises(ZeroDivisionError) as excinfo:
@@ -60,6 +62,7 @@ def test_operate():
 # Problem 4: write unit tests for specs.Fraction, then correct it.
 @pytest.fixture
 def set_up_fractions():
+    """Fixture to set up initial fractions to be used in later tests"""
     frac_1_3 = specs.Fraction(1, 3)
     frac_1_2 = specs.Fraction(1, 2)
     frac_n2_3 = specs.Fraction(-2, 3)
@@ -67,6 +70,7 @@ def set_up_fractions():
 
 
 def test_fraction_init(set_up_fractions):
+    """Unit test to test fraction constructor"""
     frac_1_3, frac_1_2, frac_n2_3 = set_up_fractions
     assert frac_1_3.numer == 1
     assert frac_1_2.denom == 2
@@ -81,6 +85,7 @@ def test_fraction_init(set_up_fractions):
 
 
 def test_fraction_str(set_up_fractions):
+    """Unit test to test the fraction str method"""
     frac_1_3, frac_1_2, frac_n2_3 = set_up_fractions
     assert str(frac_1_3) == "1/3"
     assert str(frac_1_2) == "1/2"
@@ -89,6 +94,7 @@ def test_fraction_str(set_up_fractions):
 
 
 def test_fraction_float(set_up_fractions):
+    """Unit test to test the fraction float operation"""
     frac_1_3, frac_1_2, frac_n2_3 = set_up_fractions
     assert float(frac_1_3) == 1 / 3.
     assert float(frac_1_2) == .5
@@ -96,6 +102,7 @@ def test_fraction_float(set_up_fractions):
 
 
 def test_fraction_eq(set_up_fractions):
+    """Unit test to test Fraction equality method"""
     frac_1_3, frac_1_2, frac_n2_3 = set_up_fractions
     assert frac_1_2 == specs.Fraction(1, 2)
     assert frac_1_3 == specs.Fraction(2, 6)
