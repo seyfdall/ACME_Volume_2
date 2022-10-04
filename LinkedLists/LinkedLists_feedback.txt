@@ -1,0 +1,56 @@
+10/03/22 18:17
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (5 points):
+Score += 5
+
+Problem 4 (7 points):
+LinkedList.remove(74) failed
+	Previous list:    [15, 18, 45, 17, 81, 32, 74]
+	Correct response: '[15, 18, 45, 17, 81, 32]'
+	Student response: '[15, 18, 45, 17, 81, 32, 74]'
+LinkedList.remove(16) failed
+	Previous list:    [31, 32, 69, 81, 16]
+	Correct response: '[31, 32, 69, 81]'
+	Student response: '[31, 32, 69, 81, 16]'
+Score += 6
+
+Problem 5 (8 points):
+Score += 8
+
+Problem 6 (10 points):
+NotImplementedError while appendlefting 47: Use append() or appendleft() for removal
+	Previous deque:   []
+NotImplementedError while poplefting: Use pop() or popleft() for removal
+	Previous deque:   [42, 7, 54, 60, 52]
+Score += 6
+
+Problem 7 (5 points):
+prob7() failed
+	Original file:
+drainpipe
+precipices
+proprietary
+slipshod
+cities
+taperer
+shakedown
+velocity
+beeches
+budded
+	Correct response: '\nbudded\nbeeches\nvelocity\nshakedown\ntaperer\ncities\nslipshod\nproprietary\nprecipices\ndrainpipe'
+	Student response: '\n\nbudded\nbeeches\nvelocity\nshakedown\ntaperer\ncities\nslipshod\nproprietary\nprecipices\ndrainpipe'
+Score += 0
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 40/50 = 80.0%
+
+-------------------------------------------------------------------------------
+
