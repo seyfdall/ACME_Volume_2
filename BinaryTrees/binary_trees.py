@@ -6,8 +6,13 @@
 """
 
 # These imports are used in BST.draw().
+import time
+
 import networkx as nx
+import pytest
+from matplotlib import pyplot as plt
 from networkx.drawing.nx_agraph import graphviz_layout
+import random
 
 
 class SinglyLinkedListNode:
@@ -53,7 +58,20 @@ class SinglyLinkedList:
         Returns:
             (SinglyLinkedListNode): the node containing the data.
         """
-        raise NotImplementedError("Problem 1 Incomplete")
+
+        # Define a recursive function to traverse the list
+        def _step(current):
+            """Recursively step through the list until the node containing
+            the data is found.  If there is no such node, raise a Value Error"""
+            if current is None:
+                raise ValueError(str(data) + " is not in the list.")
+            elif data == current.value:
+                return current
+            elif data < current.value:
+                return _step(current.next)
+
+        # Start the recursion on the head of the list
+        return _step(self.head)
 
 
 class BSTNode:
@@ -108,17 +126,46 @@ class BST:
             ValueError: if the data is already in the tree.
 
         Example:
-            >>> tree = BST()                    |
-            >>> for i in [4, 3, 6, 5, 7, 8, 1]: |            (4)
-            ...     tree.insert(i)              |            / \
-            ...                                 |          (3) (6)
-            >>> print(tree)                     |          /   / \
-            [4]                                 |        (1) (5) (7)
+            // >>> tree = BST()                    |
+            // >>> for i in [4, 3, 6, 5, 7, 8, 1]: |            (4)
+            // ...     tree.insert(i)              |            / \
+            // ...                                 |          (3) (6)
+            // >>> print(tree)                     |          /   / \
+            // [4]                                 |        (1) (5) (7)
             [3, 6]                              |                  \
             [1, 5, 7]                           |                  (8)
             [8]                                 |
         """
-        raise NotImplementedError("Problem 2 Incomplete")
+        new_node = BSTNode(data)
+
+        # Define a recursive method to traverse the tree
+        def _step(current):
+
+            # If data is already in the tree
+            if data == current.value:
+                raise ValueError(str(data) + " is already contained in the tree.")
+
+            # If data is less than current value go left
+            if data < current.value:
+                if current.left is None:
+                    current.left = new_node
+                    new_node.prev = current
+                else:
+                    _step(current.left)
+
+            # If data is greater than current value go right
+            if data > current.value:
+                if current.right is None:
+                    current.right = new_node
+                    new_node.prev = current
+                else:
+                    _step(current.right)
+
+        # Handle case if tree is empty
+        if self.root is None:
+            self.root = new_node
+        else:
+            _step(self.root)
 
     # Problem 3
     def remove(self, data):
@@ -129,29 +176,109 @@ class BST:
                 the tree is empty.
 
         Examples:
-            >>> print(12)                       | >>> print(t3)
+            // >>> print(12)                       | >>> print(t3)
             [6]                                 | [5]
             [4, 8]                              | [3, 6]
             [1, 5, 7, 10]                       | [1, 4, 7]
             [3, 9]                              | [8]
-            >>> for x in [7, 10, 1, 4, 3]:      | >>> for x in [8, 6, 3, 5]:
+            // >>> for x in [7, 10, 1, 4, 3]:      | >>> for x in [8, 6, 3, 5]:
             ...     t1.remove(x)                | ...     t3.remove(x)
             ...                                 | ...
-            >>> print(t1)                       | >>> print(t3)
+            // >>> print(t1)                       | >>> print(t3)
             [6]                                 | [4]
             [5, 8]                              | [1, 7]
             [9]                                 |
                                                 | >>> print(t4)
-            >>> print(t2)                       | [5]
+            // >>> print(t2)                       | [5]
             [2]                                 | >>> t4.remove(1)
             [1, 3]                              | ValueError: <message>
-            >>> for x in [2, 1, 3]:             | >>> t4.remove(5)
+            // >>> for x in [2, 1, 3]:             | >>> t4.remove(5)
             ...     t2.remove(x)                | >>> print(t4)
             ...                                 | []
-            >>> print(t2)                       | >>> t4.remove(5)
+            // >>> print(t2)                       | >>> t4.remove(5)
             []                                  | ValueError: <message>
         """
-        raise NotImplementedError("Problem 3 Incomplete")
+
+        # Find the node to remove
+        target = self.find(data)
+
+        if target is not self.root:
+
+            # Remove a leaf node
+            if target.left is None and target.right is None:
+                parent = target.prev
+
+                if parent.right is target:
+                    parent.right = None
+                else:
+                    parent.left = None
+
+                target.prev = None
+
+            # Remove a node with one child
+            if target.left is None and target.right is not None:
+                child = target.right
+                target.right = None
+
+                parent = target.prev
+                if parent.left is target:
+                    parent.left = child
+                else:
+                    parent.right = child
+                child.prev = parent
+                target.prev = None
+
+            if target.left is not None and target.right is None:
+                child = target.left
+                target.left = None
+
+                parent = target.prev
+                if parent.left is target:
+                    parent.left = child
+                else:
+                    parent.right = child
+                child.prev = parent
+                target.prev = None
+
+            # Remove a node with two children
+            if target.left is not None and target.right is not None:
+
+                predecessor = target.left
+                while predecessor.right is not None:
+                    predecessor = predecessor.right
+
+                pred_value = predecessor.value
+                self.remove(pred_value)
+                target.value = pred_value
+
+        # Remove the root node
+        if target is self.root:
+
+            if target.right is None and target.left is None:
+
+                self.root = None
+
+            elif target.right is None and target.left is not None:
+
+                self.root = target.left
+                target.left = None
+                self.root.prev = None
+
+            elif target.left is None and target.right is not None:
+
+                self.root = target.right
+                target.right = None
+                self.root.prev = None
+
+            elif target.left is not None and target.right is not None:
+
+                predecessor = target.left
+                while predecessor.right is not None:
+                    predecessor = predecessor.right
+
+                pred_value = predecessor.value
+                self.remove(pred_value)
+                target.value = pred_value
 
     def __str__(self):
         """String representation: a hierarchical view of the BST.
@@ -317,4 +444,126 @@ def prob4():
     structure. Plot the number of elements in the structure versus the build
     and search times. Use log scales where appropriate.
     """
-    raise NotImplementedError("Problem 4 Incomplete")
+    with open("english.txt", 'r') as infile:
+        contents = infile.read().strip().split('\n')
+
+    domain = [2**n for n in range(3, 12)]
+    domain.insert(0, 0)
+
+    # Arrays to store load and search times
+    load_list_times = [2**(-10)]
+    load_BST_times = [0]
+    load_AVL_times = [0]
+
+    search_list_times = [0]
+    search_BST_times = [0]
+    search_AVL_times = [0]
+
+    # Cycle through each sampling
+    for i in range(3, 12):
+
+        # Get a random sample from contents for each iteration
+        items = random.sample(contents, 2**i)
+        five_items = random.sample(items, 5)
+
+        # Time the load and search for Linked List
+        start = time.perf_counter()
+        struct_list = SinglyLinkedList()
+        for item in items:
+            struct_list.append(item)
+        finish = time.perf_counter()
+        load_list_times.append(finish - start)
+
+        start = time.perf_counter()
+        for item in five_items:
+            struct_list.iterative_find(item)
+        finish = time.perf_counter()
+        search_list_times.append(finish - start)
+
+        # Time the load and search for binary tree
+        start = time.perf_counter()
+        struct_BST = BST()
+        for item in items:
+            struct_BST.insert(item)
+        finish = time.perf_counter()
+        load_BST_times.append(finish - start)
+
+        start = time.perf_counter()
+        for item in five_items:
+            struct_BST.find(item)
+        finish = time.perf_counter()
+        search_BST_times.append(finish - start)
+
+        # Time the load and search for AVL
+        start = time.perf_counter()
+        struct_AVL = AVL()
+        for item in items:
+            struct_AVL.insert(item)
+        finish = time.perf_counter()
+        load_AVL_times.append(finish - start)
+
+        start = time.perf_counter()
+        for item in five_items:
+            struct_AVL.find(item)
+        finish = time.perf_counter()
+        search_AVL_times.append(finish - start)
+
+    # print(load_list_times)
+    # print(load_BST_times)
+    # print(load_AVL_times)
+    # print(search_list_times)
+    # print(search_BST_times)
+    # print(search_AVL_times)
+
+    # Create and subplot the Matrix-Vector graph
+    ax1 = plt.subplot(121)
+    ax1.loglog(domain, load_list_times, 'g-', label="LinkedList Load", base=2)
+    ax1.loglog(domain, load_BST_times, 'r-', label="BST Load", base=2)
+    ax1.loglog(domain, load_AVL_times, 'b-', label="AVL Load", base=2)
+    plt.xlabel("n")
+    plt.ylabel("Seconds")
+    plt.title("Load Times")
+    plt.legend(loc="upper left")
+
+    # Create and subplot the sin(2x) graph
+    ax2 = plt.subplot(122)
+    ax2.loglog(domain, search_list_times, 'g-', label="LinkedList Search", base=2)
+    ax2.loglog(domain, search_BST_times, 'r-', label="BST Search", base=2)
+    ax2.loglog(domain, search_AVL_times, 'b-', label="AVL Search", base=2)
+    plt.xlabel("n")
+    plt.title("Search Times")
+    plt.legend(loc="upper left")
+    plt.show()
+
+
+@pytest.fixture
+def set_up_bst():
+    """Fixture to setup BST"""
+    tree = BST()
+    for data in [4, 3, 6, 5, 7, 8, 1]:
+        tree.insert(data)
+    return tree
+
+
+def test_BST_insert(set_up_bst):
+    """Test insert function for BST"""
+    tree_1 = set_up_bst
+    assert tree_1.root.value == 4
+    assert tree_1.root.left.value == 3
+    assert tree_1.root.right.left.value == 5
+
+    tree_2 = BST()
+    assert tree_2.root is None
+    tree_2.insert("Hello, it's me")
+    assert tree_2.root.value == "Hello, it's me"
+
+
+def test_BST_remove(set_up_bst):
+    """Test remove function for BST"""
+    tree = set_up_bst
+    tree.remove(3)
+    assert tree.root.left.value == 1
+
+
+def test_prob4():
+    prob4()
