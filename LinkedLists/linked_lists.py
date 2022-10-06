@@ -198,6 +198,7 @@ class LinkedList:
             self.head = self.head.next
         elif node is self.tail:
             self.tail = self.tail.prev
+            self.tail.next = None
 
         # General Case for remove
         else:
@@ -297,12 +298,12 @@ class Deque(LinkedList):
             raise ValueError("popleft() - list is empty")
 
         ret_val = self.head.value
-        self.remove(self.head.value)
+        LinkedList.remove(self, self.head.value)
         return ret_val
 
     def appendleft(self, data):
         """Insert a new node at the beginning of the list"""
-        self.insert(0, data)
+        LinkedList.insert(self, 0, data)
 
     def remove(*args, **kwargs):
         """Disabling the LinkedList remove function"""
@@ -324,7 +325,7 @@ def prob7(infile, outfile):
     """
     deque = Deque()
     with open(infile, 'r') as infile:
-        contents = infile.read().split('\n')
+        contents = infile.read().strip().split('\n')
         for line in contents:
             deque.append(line)
 

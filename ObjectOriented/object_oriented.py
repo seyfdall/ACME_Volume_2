@@ -15,7 +15,7 @@ class Backpack:
     """
 
     # Problem 1: Modify __init__() and put(), and write dump().
-    def __init__(self, name):
+    def __init__(self, name, max_size=5):
         """Set the name and initialize an empty list of contents.
 
         Parameters:
@@ -23,6 +23,7 @@ class Backpack:
         """
         self.name = name
         self.contents = []
+        self.max_size = max_size
 
     def put(self, item):
         """Add an item to the backpack's list of contents."""
