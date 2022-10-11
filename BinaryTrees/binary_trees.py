@@ -67,7 +67,7 @@ class SinglyLinkedList:
                 raise ValueError(str(data) + " is not in the list.")
             elif data == current.value:
                 return current
-            elif data < current.value:
+            else:
                 return _step(current.next)
 
         # Start the recursion on the head of the list
@@ -567,3 +567,4 @@ def test_BST_remove(set_up_bst):
 
 def test_prob4():
     prob4()
+    s = "Hello there"
