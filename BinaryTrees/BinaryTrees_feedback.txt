@@ -20,3 +20,26 @@ Total score: 44/50 = 88.0%
 
 -------------------------------------------------------------------------------
 
+10/18/22 10:21
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (10 points):
+Score += 10
+
+Problem 3 (25 points):
+Score += 25
+
+Problem 4 (5 points):
+Score += 5
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 50/50 = 100.0%
+
+Excellent!
+
+-------------------------------------------------------------------------------
+
