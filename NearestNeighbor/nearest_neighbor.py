@@ -242,9 +242,9 @@ def prob6(n_neighbors, filename="mnist_subset.npz"):
     # .91
     # Import the data and setup training and test variables
     data = np.load(filename)
-    X_train = data["X_train"].astype(float)
+    X_train = data["X_train"].astype(np.float)
     y_train = data["y_train"]
-    X_test = data["X_test"].astype(float)
+    X_test = data["X_test"].astype(np.float)
     y_test = data["y_test"]
 
     # Visualize one of the images
