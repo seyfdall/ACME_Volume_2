@@ -8,7 +8,7 @@
 import numpy as np
 from scipy import linalg as la
 from scipy.spatial import KDTree
-from scipy.stats import mode
+from statistics import mode
 from matplotlib import pyplot as plt
 
 
@@ -26,7 +26,7 @@ def exhaustive_search(X, z):
     """
     # Array broadcast to find reduced matrix then use axis=0 with argmin to find best solution
     reduced_X = X - z
-    index = np.argmin(la.norm(reduced_X, axis=0))
+    index = np.argmin(la.norm(reduced_X, axis=1))
     return X[index], la.norm(X[index])
 
 
@@ -148,7 +148,7 @@ class KDT:
             # Initialize values
             x = current.value
             i = current.pivot
-            d = abs(la.norm(x) - la.norm(z))
+            d = la.norm(x - z)
 
             # Compare new and old distances and update if better
             if d < d_star:
@@ -169,7 +169,7 @@ class KDT:
                     nearest, d_star = _kd_search(current.right, nearest, d_star)
             return nearest, d_star
 
-        node, d_star = _kd_search(self.root, self.root, abs(la.norm(self.root.value) - la.norm(z)))
+        node, d_star = _kd_search(self.root, self.root, la.norm(self.root.value - z))
         return node.value, d_star
 
     def __str__(self):
@@ -222,7 +222,7 @@ class KNeighborsClassifier:
         3.5), choose the alphanumerically smallest label.
         """
         distances, indices = self.tree.query(z, k=self.n_neighbors)
-        return mode([self.labels[i] for i in indices])[0]
+        return mode([self.labels[i] for i in indices])
 
 # Problem 6
 def prob6(n_neighbors, filename="mnist_subset.npz"):
