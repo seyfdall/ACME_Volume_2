@@ -8,7 +8,7 @@
 import numpy as np
 from scipy import linalg as la
 from scipy.spatial import KDTree
-from statistics import mode
+from scipy.stats import mode
 from matplotlib import pyplot as plt
 
 
@@ -222,7 +222,7 @@ class KNeighborsClassifier:
         3.5), choose the alphanumerically smallest label.
         """
         distances, indices = self.tree.query(z, k=self.n_neighbors)
-        return mode([self.labels[i] for i in indices])
+        return mode([self.labels[i] for i in indices])[0]
 
 # Problem 6
 def prob6(n_neighbors, filename="mnist_subset.npz"):
