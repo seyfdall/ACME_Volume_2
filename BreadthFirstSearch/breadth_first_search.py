@@ -66,13 +66,13 @@ class Graph:
         """
         if n not in self.d:
             raise KeyError(str(n) + " node not in the graph")
-        self.d[n] = None
+        del self.d[n]
 
         # Cycle through the nodes in the graph and remove all other edges from other
         # nodes connecting to n
-        for node in self.d:
-            if n in node:
-                node.remove(n)
+        for node in self.d.keys():
+            if node in self.d and n in self.d[node]:
+                self.d[node].remove(n)
 
     # Problem 1
     def remove_edge(self, u, v):
@@ -273,6 +273,7 @@ def test_bfs():
     g.add_edge('A', 'B')
     g.add_edge('C', 'D')
     g.add_edge('B', 'D')
+    g.remove_node('A')
     print(g.traverse('A'))
     print(g.shortest_path('A', 'C'))
 
