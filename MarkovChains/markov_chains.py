@@ -32,14 +32,29 @@ class MarkovChain:
             ValueError: if A is not square or is not column stochastic.
 
         Example:
-            >>> MarkovChain(np.array([[.5, .8], [.5, .2]], states=["A", "B"])
+            # >>> MarkovChain(np.array([[.5, .8], [.5, .2]], states=["A", "B"])
         corresponds to the Markov Chain with transition matrix
                                    from A  from B
                             to A [   .5      .8   ]
                             to B [   .5      .2   ]
         and the label-to-index dictionary is {"A":0, "B":1}.
         """
-        raise NotImplementedError("Problem 1 Incomplete")
+        # Raise value error if A is not square or is not column stochastic
+        if A.shape[0] != A.shape[1] or not np.allclose(A.sum(axis=0), np.ones(A.shape[1])):
+            raise ValueError("The matrix A is not square or is not column stochastic")
+        self.A = A
+
+        # Construct states if needed
+        if states is None:
+            states = [i for i in range(len(A))]
+        self.labels = states
+
+        # Construct the dictionary
+        self.d = {}
+        for i in range(len(states)):
+            self.d[states[i]] = i
+
+
 
     # Problem 2
     def transition(self, state):
@@ -52,7 +67,16 @@ class MarkovChain:
         Returns:
             (str): the label of the state to transitioned to.
         """
-        raise NotImplementedError("Problem 2 Incomplete")
+        # Get the column of the transition matrix
+        column = self.A[self.d[state]]
+
+        # Draw from the categorical distribution
+        next_column_index = np.argmax(np.random.multinomial(1, column))
+
+        # Find label in dictionary
+        for label in self.labels:
+            if self.d[label] == next_column_index:
+                return label
 
     # Problem 3
     def walk(self, start, N):
@@ -121,8 +145,16 @@ class SentenceGenerator(MarkovChain):
                 including the labels for the $tart and $top states.
 
         Example:
-            >>> yoda = SentenceGenerator("yoda.txt")
-            >>> print(yoda.babble())
+            # >>> yoda = SentenceGenerator("yoda.txt")
+            # >>> print(yoda.babble())
             The dark side of loss is a path as one with you.
         """
         raise NotImplementedError("Problem 6 Incomplete")
+
+def test_prob_1():
+    markov = MarkovChain(np.array([[.5, .8], [.5, .2]]), states=["A", "B"])
+    markov = MarkovChain(np.array([[.5, .2]]), states=["A", "B"])
+
+def test_prob_2():
+    markov = MarkovChain(np.array([[.5, .8], [.5, .2]]), states=["A", "B"])
+    markov.transition('A')
