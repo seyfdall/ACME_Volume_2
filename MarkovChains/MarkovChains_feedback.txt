@@ -1,0 +1,32 @@
+11/07/22 23:01
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+MarkovChain.transition() failed for A =
+[[0 0 0 1]
+ [1 0 0 0]
+ [0 1 0 0]
+ [0 0 1 0]], transitioning 4 times from 'A'
+	Correct response: "['A', 'B', 'C', 'D', 'A']"
+	Student response: "['A', 'D', 'C', 'B', 'A']"
+Score += 4
+
+Problem 3 (10 points):
+NotImplementedError: Problem 3 Incomplete
+
+Problem 4 (10 points):
+NotImplementedError: Problem 4 Incomplete
+
+Problems 5-6 (15 points):
+NotImplementedError: Problem 5 Incomplete
+
+Code Quality (5 points):
+Add comments when you are done with your code
+Score += 0
+
+Total score: 9/50 = 18.0%
+
+-------------------------------------------------------------------------------
+
