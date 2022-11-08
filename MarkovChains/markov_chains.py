@@ -40,8 +40,10 @@ class MarkovChain:
         and the label-to-index dictionary is {"A":0, "B":1}.
         """
         # Raise value error if A is not square or is not column stochastic
-        if A.shape[0] != A.shape[1] or not np.allclose(A.sum(axis=0), np.ones(A.shape[1])):
-            raise ValueError("The matrix A is not square or is not column stochastic")
+        if A.shape[0] != A.shape[1]:
+            raise ValueError("The matrix A is not square")
+        if not np.allclose(A.sum(axis=0), np.ones(A.shape[1])):
+            raise ValueError("The matrix A is not column stochastic")
         self.A = A
 
         # Construct states if needed
@@ -68,7 +70,7 @@ class MarkovChain:
             (str): the label of the state to transitioned to.
         """
         # Get the column of the transition matrix
-        column = self.A[self.d[state]]
+        column = self.A[:, self.d[state]]
 
         # Draw from the categorical distribution
         next_column_index = np.argmax(np.random.multinomial(1, column))
@@ -90,7 +92,15 @@ class MarkovChain:
         Returns:
             (list(str)): A list of N state labels, including start.
         """
-        raise NotImplementedError("Problem 3 Incomplete")
+        walk = [start]
+        next = start
+
+        # Cycle through N times running transition() method
+        for i in range(N):
+            next = self.transition(next)
+            walk.append(next)
+
+        return walk
 
     # Problem 3
     def path(self, start, stop):
@@ -104,7 +114,15 @@ class MarkovChain:
         Returns:
             (list(str)): A list of state labels from start to stop.
         """
-        raise NotImplementedError("Problem 3 Incomplete")
+        next = start
+        path = [start]
+
+        # Cycle until we get the stop state
+        while next != stop:
+            next = self.transition(next)
+            path.append(next)
+
+        return path
 
     # Problem 4
     def steady_state(self, tol=1e-12, maxiter=40):
@@ -120,7 +138,20 @@ class MarkovChain:
         Raises:
             ValueError: if there is no convergence within maxiter iterations.
         """
-        raise NotImplementedError("Problem 4 Incomplete")
+
+        # Generate state distribution vector
+        x = np.random.dirichlet(np.ones(len(self.A)), size=1)[0]
+
+        # Iterate until steady state vector found
+        for _ in range(maxiter):
+            x_new = self.A @ x
+            if la.norm(x_new - x) < tol:
+                return x_new
+            x = x_new
+
+        # Steady state distribution vector not found - raise value error
+        raise ValueError("There was no convergence within maxiter:", maxiter, "iterations.")
+
 
 class SentenceGenerator(MarkovChain):
     """A Markov-based simulator for natural language.
@@ -134,7 +165,43 @@ class SentenceGenerator(MarkovChain):
         contents. You may assume that the file has one complete sentence
         written on each line.
         """
-        raise NotImplementedError("Problem 5 Incomplete")
+        unique_words = set()
+        sentences = []
+
+        with open(filename, 'r', encoding="utf8") as infile:
+            s = infile.read().strip()
+            sentences = s.split('\n')
+            unique_words = set(s.split())
+
+        # Build labels
+        self.labels = []
+        for word in unique_words:
+            self.labels.append(word)
+        self.labels.insert(0, "$tart")
+        self.labels.append("$top")
+
+        # Initialize matrix and build dictionary
+        self.A = np.zeros((len(self.labels), len(self.labels)))
+        self.d = {}
+        for i in range(len(self.labels)):
+            self.d[self.labels[i]] = i
+
+        # Cycle through sentences building transition matrix
+        for sentence in sentences:
+            words = sentence.split()
+            words.insert(0, "$tart")
+            words.append("$top")
+            for i in range(len(words) - 1):
+                x = self.d[words[i]]
+                y = self.d[words[i + 1]]
+                self.A[y][x] += 1
+
+        self.A[-1][-1] = 1
+
+        # Normalize the new matrix
+        col_sums = self.A.sum(axis=0, keepdims=True)
+        self.A = self.A / col_sums
+        print(self.A)
 
     # Problem 6
     def babble(self):
@@ -149,12 +216,50 @@ class SentenceGenerator(MarkovChain):
             # >>> print(yoda.babble())
             The dark side of loss is a path as one with you.
         """
-        raise NotImplementedError("Problem 6 Incomplete")
+        path = self.path("$tart", "$top")
+        path.pop(0)
+        path.pop()
+        return ' '.join(path)
+
 
 def test_prob_1():
     markov = MarkovChain(np.array([[.5, .8], [.5, .2]]), states=["A", "B"])
     markov = MarkovChain(np.array([[.5, .2]]), states=["A", "B"])
 
+
 def test_prob_2():
     markov = MarkovChain(np.array([[.5, .8], [.5, .2]]), states=["A", "B"])
-    markov.transition('A')
+    print('\n')
+    print(markov.transition('A'))
+    markov = MarkovChain(np.array([[0, 0, 0, 1], [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0]]), states=["A", "B", "C", "D"])
+    print('\n')
+    next = markov.transition('A')
+    print(next)
+    next = markov.transition(next)
+    print(next)
+    next = markov.transition(next)
+    print(next)
+    next = markov.transition(next)
+    print(next)
+
+
+def test_prob_3():
+    markov = MarkovChain(np.array([[.5, .8], [.5, .2]]), states=["A", "B"])
+    print('\n')
+    print(markov.walk('A', 3))
+    print('\n')
+    print(markov.path('A', 'B'))
+
+
+def test_prob_4():
+    markov = MarkovChain(np.array([[.5, .8], [.5, .2]]), states=["A", "B"])
+    markov.steady_state()
+    markov = MarkovChain(np.array([[0, 0, 1], [0, 1, 0], [1, 0, 0]]), states=["A", "B", "C"])
+    markov.steady_state()
+
+
+def test_prob_6():
+    yoda = SentenceGenerator("yoda.txt")
+    print("\n")
+    print(yoda.babble())
+
