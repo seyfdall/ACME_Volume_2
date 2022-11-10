@@ -13,7 +13,11 @@ class MarkovChain:
     """A Markov chain with finitely many states.
 
     Attributes:
-        (fill this out)
+        A - n x n ndarray: the column-stochastic transition matrix for a Markov chain
+            with n states
+        d - dictionary that stores labels and associates them with an index
+        labels - (list(str)): a list of n labels corresponding to the n states.
+            If not provided, the labels are the indices 0, 1, ..., n-1.
     """
     # Problem 1
     def __init__(self, A, states=None):
@@ -247,6 +251,9 @@ def test_prob_3():
     print(markov.walk('A', 3))
     print('\n')
     print(markov.path('A', 'B'))
+
+    markov2 = MarkovChain(np.array([[0.7, 0.6], [0.3, 0.4]]), ["hot", "cold"])
+    print(markov2.steady_state())
 
 
 def test_prob_4():
