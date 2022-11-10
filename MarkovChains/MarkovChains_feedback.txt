@@ -30,3 +30,29 @@ Total score: 9/50 = 18.0%
 
 -------------------------------------------------------------------------------
 
+11/10/22 09:16
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (10 points):
+Score += 10
+
+Problems 5-6 (15 points):
+Delete your print statements
+Generated sentences aren't correct and need to delete print statements
+Score += 9
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 44/50 = 88.0%
+
+-------------------------------------------------------------------------------
+
