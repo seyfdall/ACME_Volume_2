@@ -56,8 +56,6 @@ class MarkovChain:
         for i in range(len(states)):
             self.d[states[i]] = i
 
-
-
     # Problem 2
     def transition(self, state):
         """Transition to a new state by making a random draw from the outgoing
@@ -96,7 +94,7 @@ class MarkovChain:
         next = start
 
         # Cycle through N times running transition() method
-        for i in range(N):
+        for i in range(N - 1):
             next = self.transition(next)
             walk.append(next)
 
