@@ -1,10 +1,14 @@
 # shell2.py
 """Volume 3: Unix Shell 2.
-<Name>
-<Class>
-<Date>
+<Name> Dallin Seyfried
+<Class> Volume 2 Lab 002
+<Date> 11/10
 """
 
+import os
+from glob import glob
+import numpy as np
+import subprocess
 
 # Problem 3
 def grep(target_string, file_pattern):
@@ -21,15 +25,34 @@ def grep(target_string, file_pattern):
         matched_files (list): list of the filenames that matched the file
                pattern AND the target string.
     """
-    raise NotImplementedError("Problem 3 Incomplete")
+    ret_files = []
+    # Get the matched files with names that match the file_pattern
+    matched_files = glob("**/" + file_pattern, recursive=True)
 
+    # Cycle through matched_files and check if it contains the string
+    for file_name in matched_files:
+        with open(file_name, 'r') as file:
+            if target_string in file.read():
+                ret_files.append(file_name)
+
+    return ret_files
 
 # Problem 4
 def largest_files(n):
     """Return a list of the n largest files in the current directory or its
     subdirectories (from largest to smallest).
     """
-    raise NotImplementedError("Problem 4 Incomplete")
+    file_names = glob("**/*", recursive=True)
+    file_sizes = []
+    for file_name in file_names:
+        file_sizes.append(os.path.getsize(file_name))
+
+    order = np.argsort(file_sizes)[::-1]
+    file_names = np.array(file_names)[order]
+    smallest_file_name = file_names[n - 1]
+    subprocess.Popen(["wc -l < " + smallest_file_name + " > smallest.txt"], shell=True)
+    return file_names[:n]
+
     
 # Problem 6    
 def prob6(n = 10):
@@ -55,4 +78,16 @@ def prob6(n = 10):
        if (i % 3 == 0):
            threeCounter.append(i)
    #return relevant values
-   return integerCounter, twoCounter, threeCounter
+   return integerCounter, twoCounter,
+
+
+def test_grep():
+    print(grep("bash", "*.txt"))
+
+
+def test_largest_files():
+    print(largest_files(10))
+
+
+if __name__ == "__main__":
+    print(largest_files(10))
