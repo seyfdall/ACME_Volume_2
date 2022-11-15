@@ -4,7 +4,6 @@
 <Class> Math 321 - Vol 2
 <Date> 9/15/22
 """
-import matplotlib
 import numpy as np
 from matplotlib import pyplot as plt
 
