@@ -37,48 +37,28 @@ def grep(target_string, file_pattern):
 
     return ret_files
 
+
 # Problem 4
 def largest_files(n):
     """Return a list of the n largest files in the current directory or its
     subdirectories (from largest to smallest).
     """
-    file_names = glob("**/*", recursive=True)
+    # Get the files
+    file_names = glob("**/*.*", recursive=True)
     file_sizes = []
     for file_name in file_names:
         file_sizes.append(os.path.getsize(file_name))
 
+    # Sort by file size and write to the smallest.txt file
     order = np.argsort(file_sizes)[::-1]
     file_names = np.array(file_names)[order]
     smallest_file_name = file_names[n - 1]
-    subprocess.Popen(["wc -l < " + smallest_file_name + " > smallest.txt"], shell=True)
-    return file_names[:n]
+    line_count = subprocess.check_output(["wc", "-l", smallest_file_name]).decode().split()[0]
 
-    
-# Problem 6    
-def prob6(n = 10):
-   """this problem counts to or from n three different ways, and
-      returns the resulting lists each integer
-   
-   Parameters:
-       n (int): the integer to count to and down from
-   Returns:
-       integerCounter (list): list of integers from 0 to the number n
-       twoCounter (list): list of integers created by counting down from n by two
-       threeCounter (list): list of integers created by counting up to n by 3
-   """
-   #print what the program is doing
-   integerCounter = list()
-   twoCounter = list()
-   threeCounter = list()
-   counter = n
-   for i in range(n+1):
-       integerCounter.append(i)
-       if (i % 2 == 0):
-           twoCounter.append(counter - i)
-       if (i % 3 == 0):
-           threeCounter.append(i)
-   #return relevant values
-   return integerCounter, twoCounter,
+    with open("smallest.txt", "w") as file:
+        file.write(line_count)
+
+    return file_names[:n]
 
 
 def test_grep():
