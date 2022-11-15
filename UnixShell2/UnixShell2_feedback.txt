@@ -1,0 +1,89 @@
+11/15/22 09:32
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+AttributeError: 'builtin_function_or_method' object has no attribute 'strip'
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (10 points):
+ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+
+Problem 5 (5 points):
+File '0906-13-00903.jpg' not found
+File 'hubble_image.jpg' not found
+Score += 0
+
+Problem 6 (10 points):
+Score += 10
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 30/50 = 60.0%
+
+-------------------------------------------------------------------------------
+
+11/15/22 10:15
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+File content did not match!
+Score += 0
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (10 points):
+ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+
+Problem 5 (5 points):
+File '0906-13-00903.jpg' not found
+File 'hubble_image.jpg' not found
+Score += 0
+
+Problem 6 (10 points):
+Score += 10
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 30/50 = 60.0%
+
+-------------------------------------------------------------------------------
+
+11/15/22 10:32
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (10 points):
+ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+
+Problem 5 (5 points):
+File '0906-13-00903.jpg' not found
+File 'hubble_image.jpg' not found
+Score += 0
+
+Problem 6 (10 points):
+Score += 10
+
+Code Quality (5 points):
+add comments
+Score += 0
+
+Total score: 30/50 = 60.0%
+
+-------------------------------------------------------------------------------
+
