@@ -43,22 +43,14 @@ def largest_files(n):
     """Return a list of the n largest files in the current directory or its
     subdirectories (from largest to smallest).
     """
-    # Get the files
-    file_names = glob("**/*.*", recursive=True)
-    file_sizes = []
-    for file_name in file_names:
-        file_sizes.append(os.path.getsize(file_name))
 
-    # Sort by file size and write to the smallest.txt file
-    order = np.argsort(file_sizes)[::-1]
-    file_names = np.array(file_names)[order]
-    smallest_file_name = file_names[n - 1]
-    line_count = subprocess.check_output(["wc", "-l", smallest_file_name]).decode().split()[0]
-
-    with open("smallest.txt", "w") as file:
-        file.write(line_count)
-
-    return file_names[:n]
+    sizes = [[os.path.getsize(f), f] for f in glob("**/*.*", recursive=True)]
+    sizes.sort(key=lambda x: x[0], reverse=True)
+    list_files = [x[1] for x in sizes[:n]]
+    smallest_file = list_files[-1]
+    args = ["wc -l < "+smallest_file+" > smallest.txt" ]
+    task = subprocess.Popen(args, shell=True)
+    return list_files
 
 
 def test_grep():
