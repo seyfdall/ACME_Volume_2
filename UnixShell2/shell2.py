@@ -7,7 +7,6 @@
 
 import os
 from glob import glob
-import numpy as np
 import subprocess
 
 # Problem 3
@@ -43,11 +42,15 @@ def largest_files(n):
     """Return a list of the n largest files in the current directory or its
     subdirectories (from largest to smallest).
     """
-
+    # Sorts files
     sizes = [[os.path.getsize(f), f] for f in glob("**/*.*", recursive=True)]
     sizes.sort(key=lambda x: x[0], reverse=True)
+
+    # Get the largest n files then select the smallest
     list_files = [x[1] for x in sizes[:n]]
     smallest_file = list_files[-1]
+
+    # Print # of lines to smallest.txt and return file names
     args = ["wc -l < "+smallest_file+" > smallest.txt" ]
     task = subprocess.Popen(args, shell=True)
     return list_files
