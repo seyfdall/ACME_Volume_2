@@ -4,3 +4,34 @@ sampling.ipynb has not been modified yet
 
 -------------------------------------------------------------------------------
 
+11/28/22 21:38
+
+Problem 1 (10 points):
+Make sure to run the cell before you turn it in so I can see the outout
+Score += 7
+
+Problem 2 (15 points):
+Just make sure you have a cell that calls non_uniform_prior(.9, 20, beta(5,1.5)) and non_uniform_prior(.3,20, beta(5,1.5)) 
+Score += 8
+
+Problem 3 (10 points):
+Make sure to call the cell so I can see the output
+Score += 5
+
+Problem 4 (5 points):
+Score += 2
+
+Problem 5 (5 points):
+Score += 2
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 29/50 = 58.0%
+
+
+Comments:
+	Run your cells so I can see the output when you turn it in
+
+-------------------------------------------------------------------------------
+
