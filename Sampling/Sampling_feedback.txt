@@ -35,3 +35,31 @@ Comments:
 
 -------------------------------------------------------------------------------
 
+12/01/22 19:33
+
+Problem 1 (10 points):
+Its really close to .3, should be closer to .2
+Score += 9
+
+Problem 2 (15 points):
+Same here, the results are a little high
+Score += 13
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (5 points):
+Score += 5
+
+Problem 5 (5 points):
+Score += 5
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 47/50 = 94.0%
+
+Great job!
+
+-------------------------------------------------------------------------------
+
