@@ -241,12 +241,12 @@ def prob7(n):
     poly = Barycentric(domain[temp2], data[temp2])
 
     # Plot the original data
-    plt.subplot(121)
+    plt.subplot(211)
     plt.plot(domain, data)
     plt.title("original data")
-    plt.subplot(122)
 
     # Plot the approximating polynomial
+    plt.subplot(212)
     plt.plot(domain, poly(domain))
     plt.title("approximating polynomial")
     plt.tight_layout()
