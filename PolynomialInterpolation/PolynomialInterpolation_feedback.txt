@@ -4,3 +4,30 @@ polynomial_interpolation.py has not been modified yet
 
 -------------------------------------------------------------------------------
 
+01/26/23 09:17
+
+Problems 1-2 (5 points):
+Score += 5
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (5 points):
+TypeError: unsupported operand type(s) for /: 'int' and 'generator'
+
+Problem 5 (10 points):
+Score += 10
+
+Problem 6 (5 points):
+ValueError: operands could not be broadcast together with shapes (3,) (2,) 
+
+Problem 7 (10 points):
+Score += 10
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 40/50 = 80.0%
+
+-------------------------------------------------------------------------------
+
