@@ -1,0 +1,28 @@
+01/31/23 12:21
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (10 points):
+Score += 10
+
+Problem 3 (5 points):
+AttributeError: 'GaussianQuadrature' object has no attribute 'points'
+
+Problem 4 (5 points):
+AttributeError: 'GaussianQuadrature' object has no attribute 'points'
+
+Problem 5 (10 points):
+Chebyshev and Legendre look wrong
+Score += 6
+
+Problem 6 (10 points):
+AttributeError: 'GaussianQuadrature' object has no attribute 'points'
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 26/50 = 52.0%
+
+-------------------------------------------------------------------------------
+
