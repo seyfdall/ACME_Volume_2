@@ -1,9 +1,14 @@
 # quassian_quadrature.py
 """Volume 2: Gaussian Quadrature.
-<Name>
-<Class>
-<Date>
+<Name> Dallin Seyfried
+<Class> 001
+<Date> 1/26/2023
 """
+import numpy as np
+import numpy.linalg as la
+from scipy.integrate import quad, nquad
+from scipy.stats import norm
+from matplotlib import pyplot as plt
 
 
 class GaussianQuadrature:
@@ -24,7 +29,18 @@ class GaussianQuadrature:
         Raises:
             ValueError: if polytype is not 'legendre' or 'chebyshev'.
         """
-        raise NotImplementedError("Problem 1 Incomplete")
+        # Raise error if polytype doesn't match
+        if polytype != "legendre" and polytype != "chebyshev":
+            raise ValueError(f"polytype argument is not legendre or chebyshev")
+        self.polytype = polytype
+
+        self.n = n
+
+        # Define the reciprocal function
+        if self.polytype == "legendre":
+            self.reciprocal = lambda x: 1
+        else:
+            self.reciprocal = lambda x: np.sqrt(1-x**2)
 
     # Problem 2
     def points_weights(self, n):
@@ -37,12 +53,33 @@ class GaussianQuadrature:
             points ((n,) ndarray): The sampling points for the quadrature.
             weights ((n,) ndarray): The weights corresponding to the points.
         """
-        raise NotImplementedError("Problem 2 Incomplete")
+
+        # Construct Legendre
+        if self.polytype == "legendre":
+            b_k = np.sqrt(np.array([k**2 / (4*k**2 - 1) for k in range(1, n)]))
+            weight_value = 2
+
+        # Construct Chebyshev
+        else:
+            b_k = np.sqrt(np.ones(n - 1) * (1/4))
+            b_k[0] = np.sqrt(0.5)
+            weight_value = np.pi
+
+        # Create the Jacobi then calculate weights and return points and weights
+        jacobi = np.diag(b_k, 1) + np.diag(b_k, -1)
+        eig_vals, eig_vecs = la.eig(jacobi)
+        weights = weight_value * np.array([eig_vecs[0][i] ** 2 for i in range(n)])
+
+        self.points = eig_vals
+        self.weights = weights
+
+        return eig_vals, weights
 
     # Problem 3
     def basic(self, f):
         """Approximate the integral of a f on the interval [-1,1]."""
-        raise NotImplementedError("Problem 3 Incomplete")
+        g = f(self.points) * self.reciprocal(self.points)
+        return np.dot(self.weights, g)
 
     # Problem 4
     def integrate(self, f, a, b):
@@ -56,7 +93,9 @@ class GaussianQuadrature:
         Returns:
             (float): Approximate value of the integral.
         """
-        raise NotImplementedError("Problem 4 Incomplete")
+        # Use basic() to get approximate integral of f on interval [-1,1]
+        # Then multiply by (b - a) / 2 to get a new approximation
+        return (b - a) / 2 * self.basic(f)
 
     # Problem 6.
     def integrate2d(self, f, a1, b1, a2, b2):
@@ -73,8 +112,16 @@ class GaussianQuadrature:
         Returns:
             (float): Approximate value of the integral.
         """
-        raise NotImplementedError("Problem 6 Incomplete")
+        coeff = (b1 - a1) * (b2 - a2) / 4
+        sums = self.integrate(f, a1, b1) * self.integrate(f, a2, b2)
+        return coeff * sums
 
+
+# test = GaussianQuadrature(5, "chebyshev")
+# prob1 = test.points_weights(5)
+# f = lambda x, y: np.sin(x) + np.cos(y)
+# print(nquad(f, [[-10, 10], [-1, 1]])[0])
+# print(test.integrate2d(f, -10, 10, -1, 1))
 
 # Problem 5
 def prob5():
@@ -91,4 +138,41 @@ def prob5():
     scale for the y-axis. Finally, plot a horizontal line showing the error of
     scipy.integrate.quad() (which doesn’t depend on n).
     """
-    raise NotImplementedError("Problem 5 Incomplete")
+    # Fix F and declare f
+    f = lambda x: (1 / np.sqrt(2 * np.pi)) * np.exp((-x**2) / 2)
+    F = norm.cdf(2) - norm.cdf(-3)
+    legendre_error = []
+    chebyshev_error = []
+    a = 2
+    b = -3
+    domain = [5*i for i in range(1, 11)]
+
+    for n in domain:
+        # Approximate F using Legendre polynomials
+        leg = GaussianQuadrature(n, "legendre")
+        leg.points_weights(n)
+        leg_value = leg.integrate(f, a, b)
+        legendre_error.append(abs(F - leg_value))
+
+        # Approximate F using Chebyshev polynomials
+        cheb = GaussianQuadrature(n, "chebyshev")
+        cheb.points_weights(n)
+        cheb_value = cheb.integrate(f, a, b)
+        chebyshev_error.append(abs(F - cheb_value))
+
+    # Plot the errors
+    plt.yscale("log")
+    plt.xlabel("n")
+    plt.ylabel("Error")
+    plt.plot(domain, legendre_error, label="Legendre Error")
+    plt.plot(domain, chebyshev_error, label="Chebyshev Error")
+    plt.plot(domain, [quad(f, a, b)[1]]*10, label="Scipy Quad")
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+
+
+
+
+
