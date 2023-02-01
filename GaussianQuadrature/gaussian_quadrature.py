@@ -96,7 +96,7 @@ class GaussianQuadrature:
         """
         # Use basic() to get approximate integral of f on interval [-1,1]
         # Then multiply by (b - a) / 2 to get a new approximation
-        return (b - a) / 2 * self.basic(f)
+        return (b - a) / 2 * self.basic(lambda x: f((b - a) / 2 * x + (a + b) / 2))
 
     # Problem 6.
     def integrate2d(self, f, a1, b1, a2, b2):
@@ -141,23 +141,21 @@ def prob5():
     """
     # Fix F and declare f
     f = lambda x: (1 / np.sqrt(2 * np.pi)) * np.exp((-x**2) / 2)
-    F = norm.cdf(2) - norm.cdf(-3)
+    a = -3
+    b = 2
+    F = norm.cdf(b) - norm.cdf(a)
     legendre_error = []
     chebyshev_error = []
-    a = 2
-    b = -3
     domain = [5*i for i in range(1, 11)]
 
     for n in domain:
         # Approximate F using Legendre polynomials
         leg = GaussianQuadrature(n, "legendre")
-        leg.points_weights(n)
         leg_value = leg.integrate(f, a, b)
         legendre_error.append(abs(F - leg_value))
 
         # Approximate F using Chebyshev polynomials
         cheb = GaussianQuadrature(n, "chebyshev")
-        cheb.points_weights(n)
         cheb_value = cheb.integrate(f, a, b)
         chebyshev_error.append(abs(F - cheb_value))
 
@@ -167,11 +165,11 @@ def prob5():
     plt.ylabel("Error")
     plt.plot(domain, legendre_error, label="Legendre Error")
     plt.plot(domain, chebyshev_error, label="Chebyshev Error")
-    plt.plot(domain, [quad(f, a, b)[1]]*10, label="Scipy Quad")
+    plt.plot(domain, [abs(F - quad(f, a, b)[0])]*10, label="Scipy Quad")
     plt.legend()
+    plt.title("Problem 5")
     plt.tight_layout()
     plt.show()
-
 
 
 
