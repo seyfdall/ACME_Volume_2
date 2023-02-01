@@ -35,6 +35,7 @@ class GaussianQuadrature:
         self.polytype = polytype
 
         self.n = n
+        self.points_weights(self.n)
 
         # Define the reciprocal function
         if self.polytype == "legendre":
