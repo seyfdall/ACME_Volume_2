@@ -113,16 +113,20 @@ class GaussianQuadrature:
         Returns:
             (float): Approximate value of the integral.
         """
+        # Establish coeffs
         coeff = (b1 - a1) * (b2 - a2) / 4
-        sums = self.integrate(f, a1, b1) * self.integrate(f, a2, b2)
-        return coeff * sums
 
+        # Define h(x,y)
+        h = lambda x, y: f((b1 - a1) / 2 * x + (a1 + b1) / 2, (b2 - a2) / 2 * y + (a2 + b2) / 2)
+        sum = 0
 
-# test = GaussianQuadrature(5, "chebyshev")
-# prob1 = test.points_weights(5)
-# f = lambda x, y: np.sin(x) + np.cos(y)
-# print(nquad(f, [[-10, 10], [-1, 1]])[0])
-# print(test.integrate2d(f, -10, 10, -1, 1))
+        # Using (10.5) to compute the integral approximation
+        for i in range(len(self.points)):
+            for j in range(len(self.points)):
+                sum += self.weights[i] * self.weights[j] * h(self.points[i], self.points[j]) * \
+                       self.reciprocal(self.points[i]) * self.reciprocal(self.points[j])
+        return coeff * sum
+    
 
 # Problem 5
 def prob5():
