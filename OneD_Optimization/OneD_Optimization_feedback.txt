@@ -1,0 +1,6 @@
+02/06/23 18:03
+
+ModuleNotFoundError while loading 'oneD_optimization.py': No module named 'jax'
+
+-------------------------------------------------------------------------------
+
