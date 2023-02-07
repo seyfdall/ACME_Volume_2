@@ -9,8 +9,8 @@ import numpy as np
 from scipy import optimize as opt
 from matplotlib import pyplot as plt
 from scipy.optimize import linesearch
-# from jax import numpy as jnp
-# from jax import grad
+from jax import numpy as jnp
+from jax import grad
 
 # Problem 1
 def golden_section(f, a, b, tol=1e-5, maxiter=100):
