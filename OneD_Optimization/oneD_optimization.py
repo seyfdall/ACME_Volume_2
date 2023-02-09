@@ -8,9 +8,9 @@
 import numpy as np
 from scipy import optimize as opt
 from matplotlib import pyplot as plt
-from scipy.optimize import linesearch
-from jax import numpy as jnp
-from jax import grad
+# from scipy.optimize import linesearch
+# from jax import numpy as jnp
+# from jax import grad
 
 # Problem 1
 def golden_section(f, a, b, tol=1e-5, maxiter=100):
@@ -224,17 +224,17 @@ def backtracking(f, Df, x, p, alpha=1, rho=.9, c=1e-4):
     return alpha
 
 
-def test_prob_4():
-    # Set up functions
-    f = lambda x: x[0]**2 + x[1]**2 + x[2]**2
-    Df = lambda x: np.array([2*x[0], 2*x[1], 2*x[2]])
-
-    # Compute approximations of alpha - step size
-    x = jnp.array([150., .03, 40.])
-    p = jnp.array([-.5, -100., -4.5])
-    phi = lambda alpha: f(x + alpha * p)
-    dphi = grad(phi)
-    alpha1, _ = linesearch.scalar_search_armijo(phi, phi(0.), dphi(0.))
-    alpha2 = backtracking(f, Df, x, p)
-    print(f"armijo alpha = {alpha1}")
-    print(f"backtracking alpha = {alpha2}")
+# def test_prob_4():
+#     # Set up functions
+#     f = lambda x: x[0]**2 + x[1]**2 + x[2]**2
+#     Df = lambda x: np.array([2*x[0], 2*x[1], 2*x[2]])
+#
+#     # Compute approximations of alpha - step size
+#     x = jnp.array([150., .03, 40.])
+#     p = jnp.array([-.5, -100., -4.5])
+#     phi = lambda alpha: f(x + alpha * p)
+#     dphi = grad(phi)
+#     alpha1, _ = linesearch.scalar_search_armijo(phi, phi(0.), dphi(0.))
+#     alpha2 = backtracking(f, Df, x, p)
+#     print(f"armijo alpha = {alpha1}")
+#     print(f"backtracking alpha = {alpha2}")
