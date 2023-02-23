@@ -160,7 +160,7 @@ def prob6(filename="fake_contacts.txt"):
     name_pattern = re.compile(r"^[a-zA-Z]* ([A-Z]\. )?[a-zA-Z]*")
 
     # pattern to find birthday
-    birthday_pattern = re.compile(r"\d{1,2}/\d{1,2}/((\d\d)|(\d\d\d\d))")
+    birthday_pattern = re.compile(r"\d{1,2}/\d{1,2}/((\d\d\d\d)|(\d\d))")
 
     # Function to clean birthday
     def clean_birthday_info(birth):
@@ -219,6 +219,7 @@ def prob6(filename="fake_contacts.txt"):
 # Test Problem 6
 def test_prob6():
     dictionary = prob6()
+    print(dictionary)
     print('\n')
     print(dictionary.get("John Doe"))
 
