@@ -1,10 +1,13 @@
 # gradient_methods.py
 """Volume 2: Gradient Descent Methods.
-<Name>
-<Class>
-<Date>
+<Name> Dallin Seyfried
+<Class> 001
+<Date> 2/23/2023
 """
 
+import scipy.optimize as opt
+import scipy.linalg as la
+import numpy as np
 
 # Problem 1
 def steepest_descent(f, Df, x0, tol=1e-5, maxiter=100):
@@ -24,7 +27,33 @@ def steepest_descent(f, Df, x0, tol=1e-5, maxiter=100):
         (bool): Whether or not the algorithm converged.
         (int): The number of iterations computed.
     """
-    raise NotImplementedError("Problem 1 Incomplete")
+    post = x0
+    iters = 0
+    converged = False
+
+    # Run gradient descent till exceed maxiters or less than tolerance
+    for _ in range(maxiter):
+        iters += 1
+        pre = post
+        # Find the minimizer
+        phi = lambda alpha: f(pre - alpha * Df(pre).T)
+        alpha_k = opt.minimize_scalar(phi).x
+        # Update Post
+        post = pre - alpha_k * Df(pre).T
+        # Check Tolerance
+        if la.norm(Df(post), ord=np.inf) < tol:
+            converged = True
+            break
+
+    return post, converged, iters
+
+
+# Test Problem 1
+def test_steepest_descent():
+    f = lambda x: x[0]**4 + x[1]**4 + x[2]**4
+    Df = lambda x: np.array([4*x[0]**3, 4*x[1]**3, 4*x[2]**3])
+    x0 = np.array([1, 2, 3])
+    print(steepest_descent(f, Df, x0))
 
 
 # Problem 2
@@ -42,7 +71,38 @@ def conjugate_gradient(Q, b, x0, tol=1e-4):
         (bool): Whether or not the algorithm converged.
         (int): The number of iterations computed.
     """
-    raise NotImplementedError("Problem 2 Incomplete")
+    r0 = Q @ x0 - b
+    d0 = -r0
+    k = 0
+    n = len(b)
+
+    # Conjugate Descent
+    while la.norm(r0, ord=np.inf) >= tol and k < n:
+        # Find minimizer with line search
+        a0 = r0 @ r0 / (d0 @ Q @ d0)
+        # Update x and other attributes of Gradient Descent
+        x1 = x0 + a0 * d0
+        r1 = r0 + a0 * Q @ d0
+        b1 = r1 @ r1 / (r0 @ r0)
+        d1 = -r1 + b1 * d0
+        k = k + 1
+        x0 = x1
+        r0 = r1
+        d0 = d1
+
+    return x0, la.norm(r0, ord=np.inf) < tol, k
+
+
+# Test Problem 2
+def test_conjugate_gradient():
+    n = 4
+    A = np.random.random((n, n))
+    Q = A.T @ A
+    b, x0 = np.random.random((2,n))
+    x = la.solve(Q, b)
+    x_test = conjugate_gradient(Q, b, x0)
+    print(np.allclose(Q @ x, b))
+    print(np.allclose(Q @ x_test, b))
 
 
 # Problem 3
@@ -64,7 +124,31 @@ def nonlinear_conjugate_gradient(f, df, x0, tol=1e-5, maxiter=100):
         (bool): Whether or not the algorithm converged.
         (int): The number of iterations computed.
     """
-    raise NotImplementedError("Problem 3 Incomplete")
+    # Initialize beginning approximation
+    r0 = -df(x0).T
+    d0 = r0
+    a0 = opt.minimize_scalar(lambda alpha: f(x0 + alpha * d0)).x
+    x1 = x0 + a0 * d0
+    k = 1
+
+    # Cycle through non-linear conjugate gradient
+    while la.norm(r0, ord=np.inf) >= tol and k < maxiter:
+        r1 = -df(x1).T
+        b1 = r1 @ r1 / (r0 @ r0)
+        d1 = r1 + b1 * d0
+        a1 = opt.minimize_scalar(lambda alpha: f(x1 + alpha * d1)).x
+        x0 = x1 + a1 * d1
+        r0 = r1
+        d0 = d1
+        k = k + 1
+
+    return x0, la.norm(r0, ord=np.inf) < tol, k
+
+
+# Test Problem 3
+def test_nonlinear_conjugate_gradient():
+    print(opt.fmin_cg(opt.rosen, np.array([10, 10]), fprime=opt.rosen_der))
+    print(nonlinear_conjugate_gradient(opt.rosen, opt.rosen_der, np.array([10, 10])))
 
 
 # Problem 4
