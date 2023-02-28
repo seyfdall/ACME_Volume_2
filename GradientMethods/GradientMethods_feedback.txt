@@ -1,0 +1,33 @@
+02/27/23 17:53
+
+Problem 1 (10 points):
+Score += 10
+
+Problem 2 (10 points):
+Score += 10
+
+Problem 3 (10 points):
+nonlinear_conjugate_gradient() failed for f = xQx/2 - bx where Q is 5x5 (Df(x) != 0)
+	Correct response: [0. 0. 0. 0. 0.]
+	Student response: [ 0.419  0.154  0.328 -0.199  0.306]
+nonlinear_conjugate_gradient() failed for f = xQx/2 - bx where Q is 7x7 (Df(x) != 0)
+	Correct response: [0. 0. 0. 0. 0. 0. 0.]
+	Student response: [ 0.873 -0.232  0.254 -0.591  0.065  0.638  0.017]
+nonlinear_conjugate_gradient() failed for f = xQx/2 - bx where Q is 10x10 (Df(x) != 0)
+	Correct response: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+	Student response: [ 0.264  0.164 -0.096 -0.501  0.293  0.114  0.046  0.029  0.365 -0.224]
+Score += 0
+
+Problem 4 (5 points):
+NotImplementedError: Problem 4 Incomplete
+
+Problems 5 and 6 (10 points):
+NotImplementedError: Problem 6 Incomplete
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 25/50 = 50.0%
+
+-------------------------------------------------------------------------------
+
