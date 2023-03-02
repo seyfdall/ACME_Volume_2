@@ -31,3 +31,30 @@ Total score: 25/50 = 50.0%
 
 -------------------------------------------------------------------------------
 
+03/02/23 09:23
+
+Problem 1 (10 points):
+Score += 10
+
+Problem 2 (10 points):
+Score += 10
+
+Problem 3 (10 points):
+nonlinear_conjugate_gradient() failed for f = xQx/2 - bx where Q is 5x5 (Df(x) != 0)
+	Correct response: [0. 0. 0. 0. 0.]
+	Student response: [ 0.001 -0.003 -0.002 -0.004 -0.001]
+Score += 7
+
+Problem 4 (5 points):
+ValueError: setting an array element with a sequence. The requested array has an inhomogeneous shape after 1 dimensions. The detected shape was (3,) + inhomogeneous part.
+
+Problems 5 and 6 (10 points):
+NotImplementedError: Problem 6 Incomplete
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 32/50 = 64.0%
+
+-------------------------------------------------------------------------------
+
