@@ -106,7 +106,7 @@ def test_conjugate_gradient():
 
 
 # Problem 3
-def nonlinear_conjugate_gradient(f, df, x0, tol=1e-5, maxiter=100):
+def nonlinear_conjugate_gradient(f, df, x0, tol=1e-5, maxiter=10000):
     """Compute the minimizer of f using the nonlinear conjugate gradient
     algorithm.
 
@@ -134,19 +134,21 @@ def nonlinear_conjugate_gradient(f, df, x0, tol=1e-5, maxiter=100):
     # Cycle through non-linear conjugate gradient
     while la.norm(r0, ord=np.inf) >= tol and k < maxiter:
         r1 = -df(x1).T
-        b1 = r1 @ r1 / (r0 @ r0)
+        b1 = (r1 @ r1) / (r0 @ r0)
         d1 = r1 + b1 * d0
         a1 = opt.minimize_scalar(lambda alpha: f(x1 + alpha * d1)).x
-        x0 = x1 + a1 * d1
+        x1 = x1 + a1 * d1
         r0 = r1
         d0 = d1
         k = k + 1
 
-    return x0, la.norm(r0, ord=np.inf) < tol, k
+    return x1, la.norm(r0, ord=np.inf) < tol, k
 
 
 # Test Problem 3
 def test_nonlinear_conjugate_gradient():
+    # rosen = lambda x: (1 - x[0])**2 + 100 * (x[1] - x[0]**2)**2
+    # rosen_der = lambda x: np.array([202*x[0] - 200*x[1] - 2,-200*x[0] + 200 * x[1]])
     print(opt.fmin_cg(opt.rosen, np.array([10, 10]), fprime=opt.rosen_der))
     print(nonlinear_conjugate_gradient(opt.rosen, opt.rosen_der, np.array([10, 10])))
 
@@ -158,7 +160,22 @@ def prob4(filename="linregression.txt",
     the data from the given file, the given initial guess, and the default
     tolerance. Return the solution to the corresponding Normal Equations.
     """
-    raise NotImplementedError("Problem 4 Incomplete")
+    # Load the data and construct A and y
+    data = np.loadtxt(filename)
+    y = data[:,0]
+    A = np.c_[np.ones(len(data)), data[:,1:]]
+
+    # Build the matrix and vector for conjugate gradient
+    Q = A.T @ A
+    b = A.T @ y
+
+    return conjugate_gradient(Q, b, x0)
+
+
+# Test Problem 4
+def test_prob4():
+    print("\n")
+    print(prob4())
 
 
 # Problem 5
@@ -174,7 +191,10 @@ class LogisticRegression1D:
             y ((n,) ndarray): An array of n outcome variables.
             guess (array): Initial guess for beta.
         """
-        raise NotImplementedError("Problem 5 Incomplete")
+        m = len(x)
+        neg_log_likelihood = lambda b0, b1: np.sum(np.log(1 + np.exp(-(b0 + b1*x))) + (1 - y)*(b0 + b1*x))
+        # test = opt.fmin_cg(neg_log_likelihood, guess)
+        pass
 
     def predict(self, x):
         """Calculate the probability of an unlabeled predictor variable
@@ -184,6 +204,14 @@ class LogisticRegression1D:
             x (float): a predictor variable with an unknown label.
         """
         raise NotImplementedError("Problem 5 Incomplete")
+
+
+# Test Problem 5
+def test_logistic_regression1D():
+    log_reg = LogisticRegression1D()
+    x = np.array([1,2,3,4])
+    y = np.array([0,0,1,1])
+    log_reg.fit(x,y,[0,1])
 
 
 # Problem 6
