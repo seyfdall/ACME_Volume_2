@@ -167,9 +167,22 @@ def prob6(filename='productMix.npz'):
     unit_prices = data.f.p
     available_resource_units = data.f.m
     demand_constraints = data.f.d
-    pass
+
+    # Construct A
+    A = np.row_stack((resource_coeffs, np.eye(len(demand_constraints))))
+
+    # Construct b
+    b = np.concatenate((available_resource_units, demand_constraints))
+
+    # Construct c
+    c = unit_prices * -1
+
+    # Solve
+    simple_solver = SimplexSolver(c, A, b)
+    min, dep, ind = simple_solver.solve()
+    return np.array([int(dep[0]), int(dep[1]), int(dep[2]), int(dep[3])])
 
 
 # Test Problem 6
 def test_prob6():
-    prob6()
+    print(prob6())
