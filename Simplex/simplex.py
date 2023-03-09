@@ -1,8 +1,8 @@
 """Volume 2: Simplex
 
-<Name>
-<Date>
-<Class>
+<Name> Dallin Seyfried
+<Date> 03/07/2023
+<Class> 001
 """
 
 import numpy as np
@@ -44,7 +44,7 @@ class SimplexSolver(object):
         self.b = b
 
         # Generate dictionary
-        self._generatedictionary(self.c, self.A, self.b)
+        self.dictionary = self._generatedictionary(self.c, self.A, self.b)
 
     # Problem 2
     def _generatedictionary(self, c, A, b):
@@ -55,24 +55,31 @@ class SimplexSolver(object):
             A ((m,n) ndarray): The constraint coefficients matrix.
             b ((m,) ndarray): The constraint vector.
         """
-        # Create components of the D matrix
-        A_bar = np.column_stack((A, np.eye(self.m)))
-        c_bar = np.append(c, np.zeros(self.m))
+        # # Create components of the D matrix
+        # A_bar = np.column_stack((A, np.eye(self.m)))
+        # c_bar = np.append(c, np.zeros(self.m))
+        #
+        # # Construct the D matrix
+        # D_top = np.insert(c_bar, 0, 0)
+        # D_bottom = np.column_stack((b, -A_bar))
+        # D = np.row_stack((D_top, D_bottom))
 
-        # Construct the D matrix
-        D_top = np.insert(c_bar, 0, 0)
-        D_bottom = np.column_stack((b, -A_bar))
-        D = np.row_stack((D_top, D_bottom))
+        m, n = A.shape
+        dictionary = np.zeros((1 + m, 1 + m + n))
+        # Slice in each piece.
+        dictionary[0, 1:] = np.hstack((c, np.zeros(m)))
+        dictionary[1:, 0] = b
+        dictionary[1:, 1:] = np.hstack((-A, -np.eye(m)))
+        return dictionary
 
-        self.D = D
-
+        # self.dictionary = D
 
     # Problem 3a
     def _pivot_col(self):
         """Return the column index of the next pivot column.
         """
         # Find the column index
-        col_ind = np.where(self.D[0, 1:] < 0)[0]
+        col_ind = np.where(self.dictionary[0, 1:] < 0)[0]
         return col_ind[0] + 1
 
     # Problem 3b
@@ -81,12 +88,12 @@ class SimplexSolver(object):
         (Bland's Rule).
         """
         # Calculate which rows are valid - if none then problem is unbounded
-        neg_rows = np.insert(self.D[1:, index] < 0, 0, False)
+        neg_rows = np.insert(self.dictionary[1:, index] < 0, 0, False)
         if len(neg_rows) == 0:
             raise ValueError("Problem is unbounded")
 
         # Find the appropriate row_index/indices
-        row_ind = np.argmin(np.abs(self.D[neg_rows, 0] / self.D[neg_rows, index]))
+        row_ind = np.argmin(np.abs(self.dictionary[neg_rows, 0] / self.dictionary[neg_rows, index]))
 
         # Blanch's rule to return first indexed
         if type(row_ind) is np.ndarray:
@@ -102,14 +109,16 @@ class SimplexSolver(object):
         # Find where pivot is in array
         col_index = self._pivot_col()
         row_index = self._pivot_row(col_index)
+        print(row_index)
 
         # Divide pivot row by abs(pivot)
-        self.D[row_index, :] = self.D[row_index, :] / np.abs(self.D[row_index, col_index])
+        self.dictionary[row_index] /= -float(self.dictionary[row_index, col_index])
 
         # Simplify matrix by zeroing out pivot column with row operations
-        for i in range(len(self.D)):
+        for i in range(len(self.dictionary)):
             if i != row_index:
-                self.D[i, :] = self.D[i, :] - self.D[i, col_index] / self.D[row_index, col_index] * self.D[row_index, :]
+                self.dictionary[i] += self.dictionary[row_index] * self.dictionary[i, col_index]
+                # self.dictionary[i] = self.dictionary[i] - self.dictionary[i, col_index] / self.dictionary[row_index, col_index] * self.dictionary[row_index, :]
 
     # Problem 5
     def solve(self):
@@ -121,18 +130,18 @@ class SimplexSolver(object):
             (dict): The nonbasic variables and their values.
         """
         # Pivot and cycle through the dictionary until solved or unbounded error found
-        while True in (self.D[0, 1:] < 0):
+        while True in (self.dictionary[0, 1:] < 0):
             self.pivot()
 
         # Calculate min
-        min = self.D[0, 0]
+        min = self.dictionary[0, 0]
         independent = dict()
         dependent = dict()
 
         # Create dictionaries for independent and dependent variables
-        for i in range(1, len(self.D[0])):
-            if self.D[0, i] == 0:
-                dependent[i - 1] = (self.D[:, i] == -1) @ (self.D[:, 0])
+        for i in range(1, len(self.dictionary[0])):
+            if self.dictionary[0, i] == 0:
+                dependent[i - 1] = (self.dictionary[:, i] == -1) @ (self.dictionary[:, 0])
             else:
                 independent[i - 1] = 0
 
@@ -163,26 +172,27 @@ def prob6(filename='productMix.npz'):
         ((n,) ndarray): the number of units that should be produced for each product.
     """
     data = np.load(filename)
-    resource_coeffs = data.f.A
-    unit_prices = data.f.p
-    available_resource_units = data.f.m
-    demand_constraints = data.f.d
+    A = data.f.A
+    p = data.f.p
+    m = data.f.m
+    d = data.f.d
 
     # Construct A
-    A = np.row_stack((resource_coeffs, np.eye(len(demand_constraints))))
+    A = np.row_stack((A, np.eye(len(d))))
 
     # Construct b
-    b = np.concatenate((available_resource_units, demand_constraints))
+    b = np.concatenate((m, d))
 
     # Construct c
-    c = unit_prices * -1
+    c = p * -1
 
     # Solve
     simple_solver = SimplexSolver(c, A, b)
     min, dep, ind = simple_solver.solve()
-    return np.array([int(dep[0]), int(dep[1]), int(dep[2]), int(dep[3])])
+    return np.array([dep[0], dep[1], dep[2], dep[3]])
 
 
 # Test Problem 6
 def test_prob6():
+    print("\n")
     print(prob6())
