@@ -55,14 +55,6 @@ class SimplexSolver(object):
             A ((m,n) ndarray): The constraint coefficients matrix.
             b ((m,) ndarray): The constraint vector.
         """
-        # # Create components of the D matrix
-        # A_bar = np.column_stack((A, np.eye(self.m)))
-        # c_bar = np.append(c, np.zeros(self.m))
-        #
-        # # Construct the D matrix
-        # D_top = np.insert(c_bar, 0, 0)
-        # D_bottom = np.column_stack((b, -A_bar))
-        # D = np.row_stack((D_top, D_bottom))
 
         m, n = A.shape
         dictionary = np.zeros((1 + m, 1 + m + n))
@@ -71,8 +63,6 @@ class SimplexSolver(object):
         dictionary[1:, 0] = b
         dictionary[1:, 1:] = np.hstack((-A, -np.eye(m)))
         return dictionary
-
-        # self.dictionary = D
 
     # Problem 3a
     def _pivot_col(self):
@@ -107,9 +97,8 @@ class SimplexSolver(object):
         negative elementary vector.
         """
         # Find where pivot is in array
-        col_index = self._pivot_col()
+        col_index = int(self._pivot_col())
         row_index = self._pivot_row(col_index)
-        print(row_index)
 
         # Divide pivot row by abs(pivot)
         self.dictionary[row_index] /= -float(self.dictionary[row_index, col_index])
