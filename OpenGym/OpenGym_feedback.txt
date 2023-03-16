@@ -4,3 +4,30 @@ opengym.ipynb has not been modified yet
 
 -------------------------------------------------------------------------------
 
+03/16/23 09:38
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Plot is slightly off
+Score += 3
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (15 points):
+Score += 15
+
+Problem 5 (10 points):
+Score += 10
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 48/50 = 96.0%
+
+Great job!
+
+-------------------------------------------------------------------------------
+
