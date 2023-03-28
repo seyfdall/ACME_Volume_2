@@ -1,0 +1,19 @@
+03/27/23 18:36
+
+Problem 1-3 (15 points):
+Not quite the correct output for problem 3
+Score += 7
+
+Problem 4 (15 points):
+Score += 0
+
+Problem 5 (15 points):
+Score += 0
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 12/50 = 24.0%
+
+-------------------------------------------------------------------------------
+
