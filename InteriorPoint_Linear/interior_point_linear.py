@@ -85,7 +85,8 @@ def interiorPoint(A, b, c, niter=20, tol=1e-16, verbose=False):
 
     # Define F
     def F(x, lam, mu):
-        return np.hstack((A.T @ lam + mu - c, A @ x - b, np.diag(mu) @ x))
+        lag_f = np.hstack((A.T @ lam + mu - c, A @ x - b, np.diag(mu) @ x))
+        return lag_f
 
     # Do a linear search to find next step
     def search_direction(x, lam, mu):
@@ -97,7 +98,7 @@ def interiorPoint(A, b, c, niter=20, tol=1e-16, verbose=False):
 
         # Calculate the right hand side
         v = x @ mu / n
-        b_vec = -F(x, lam, mu) + np.concatenate((np.zeros(n + m), np.ones(n) * v / 10))
+        b_vec = -F(x, lam, mu) + np.hstack((np.zeros(n + m), np.ones(n) * v / 10))
 
         # lu_factor A_mat to get compatible with lu_solve
         lu, piv = la.lu_factor(A_mat)
@@ -110,6 +111,7 @@ def interiorPoint(A, b, c, niter=20, tol=1e-16, verbose=False):
     def step_size(x, mu, deltas):
         # Get specific x and mu deltas
         x_deltas = deltas[:n]
+        lam_deltas = deltas[n:n+m]
         mu_deltas = deltas[n+m:]
 
         # Calculate maxes
@@ -121,7 +123,7 @@ def interiorPoint(A, b, c, niter=20, tol=1e-16, verbose=False):
         # Calculate alpha and delta
         alpha = min(1, 0.95 * alpha_max)
         delta = min(1, 0.95 * x_max)
-        return alpha, delta
+        return alpha, delta, [x_deltas, lam_deltas, mu_deltas]
 
     # Get the starting point
     x, lam, mu = starting_point(A, b, c)
@@ -132,12 +134,12 @@ def interiorPoint(A, b, c, niter=20, tol=1e-16, verbose=False):
         direction = search_direction(x, lam, mu)
 
         # Compute step size
-        alpha, delta = step_size(x, mu, direction)
+        alpha, delta, deltas = step_size(x, mu, direction)
 
         # Take the step
-        x = x + delta * x
-        lam = lam + alpha * lam
-        mu = mu + alpha * mu
+        x = x + delta * deltas[0]
+        lam = lam + alpha * deltas[1]
+        mu = mu + alpha * deltas[2]
 
         # Check if optimal
         if x @ mu / n < tol:
@@ -159,6 +161,7 @@ def test_interior_point():
     # opt, val = interiorPoint(A, b, -c_neg)
 
 
+# Problem 5
 def leastAbsoluteDeviations(filename='simdata.txt'):
     """Generate and show the plot requested in the lab."""
     # Load data
@@ -198,9 +201,10 @@ def leastAbsoluteDeviations(filename='simdata.txt'):
     domain = np.linspace(0, 10, 200)
     plt.plot(domain, domain * slope + intercept, label="Least Squares")
     plt.plot(domain, domain * beta + b, label="LAD")
+    plt.scatter(data[:, 1], data[:, 0], label="Data Points")
+    plt.legend()
     plt.tight_layout()
     plt.show()
-    pass
 
 
 # Test leastAbsoluteDeviations
