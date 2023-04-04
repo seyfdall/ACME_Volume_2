@@ -1,0 +1,17 @@
+04/03/23 18:32
+
+Problems 1-4 (35 points):
+Passed 0/350 tests
+Score += 0
+
+Problem 5 (10 points):
+Add data points and make the lines correct
+Score += 2
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 7/50 = 14.0%
+
+-------------------------------------------------------------------------------
+
