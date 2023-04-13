@@ -1,9 +1,11 @@
 # policy_iteration.py
 """Volume 2: Policy Function Iteration.
-<Name>
-<Class>
-<Date>
+<Name> Dallin Seyfried
+<Class> 001
+<Date> 04/13/2023
 """
+
+import numpy as np
 
 # Intialize P for test example
 #Left =0
@@ -30,7 +32,6 @@ P[3][2] = [(0, 0, 0, True)]
 P[3][3] = [(0, 0, 0, True)]
 
 
-
 # Problem 1
 def value_iteration(P, nS ,nA, beta = 1, tol=1e-8, maxiter=3000):
     """Perform Value Iteration according to the Bellman optimality principle.
@@ -48,7 +49,35 @@ def value_iteration(P, nS ,nA, beta = 1, tol=1e-8, maxiter=3000):
        v (ndarray): The discrete values for the true value function.
        n (int): number of iterations
     """
-    raise NotImplementedError("Problem 1 Incomplete")
+    # Initialize value function vectors
+    V_olds = np.zeros(nS)
+    V_new = np.zeros(nS)
+    k = 0
+
+    for k in range(maxiter):
+        for s in range(nS):
+            sa_vector = np.zeros(nA)
+            for a in range(nA):
+                for tuple_info in P[s][a]:
+                    # tuple_info is a tuple of (probability, next state, reward, done)
+                    p, s_, u, _ = tuple_info
+                    # sums up the possible end states and rewards with given action
+                    sa_vector[a] += (p * (u + beta * V_olds[s_]))
+                # Add the max value to the value function
+                V_new[s] = np.max(sa_vector)
+        # Check to see if vectors match, update and repeat if not
+        if np.linalg.norm(V_new - V_olds) < tol:
+            break
+        V_olds = V_new.copy()
+
+    return V_new, k + 1
+
+
+# Test Problem 1
+def test_value_iteration():
+    print('\n')
+    print(value_iteration(P=P, nS=4, nA=4, beta=1))
+
 
 # Problem 2
 def extract_policy(P, nS, nA, v, beta = 1.0):
@@ -59,13 +88,34 @@ def extract_policy(P, nS, nA, v, beta = 1.0):
                 (P[state][action] = [(prob, nextstate, reward, is_terminal)...]).
         nS (int): The number of states.
         nA (int): The number of actions.
-        v (ndarray): The value function values.
+        v (ndarray): The value function values - optimal V* from value iteration.
         beta (float): The discount rate (between 0 and 1).
 
     Returns:
         policy (ndarray): which direction to move in from each square.
     """
-    raise NotImplementedError("Problem 2 Incomplete")
+    # Initialize policy vector
+    policy = np.zeros(nS)
+    for s in range(nS):
+        sa_vector = np.zeros(nA)
+        for a in range(nA):
+            for tuple_info in P[s][a]:
+                # tuple_info is a tuple of (probability, next state, reward, done)
+                p, s_, u, _ = tuple_info
+                # sums up the possible end states and rewards with given action
+                sa_vector[a] += (p * (u + beta * v[s_]))
+            # Add the max value to the value function
+            policy[s] = np.argmax(sa_vector)
+
+    return policy
+
+
+# Test Problem 2
+def test_extract_policy():
+    print('\n')
+    v = value_iteration(P=P, nS=4, nA=4)[0]
+    print(extract_policy(P=P, nS=4, nA=4, v=v))
+
 
 # Problem 3
 def compute_policy_v(P, nS, nA, policy, beta=1.0, tol=1e-8):
@@ -83,7 +133,19 @@ def compute_policy_v(P, nS, nA, policy, beta=1.0, tol=1e-8):
     Returns:
         v (ndarray): The discrete values for the true value function.
     """
-    raise NotImplementedError("Problem 3 Incomplete")
+    # Define values
+    values = np.zeros(nS)
+    for s in range(nS):
+        pass
+
+
+# Test Problem 3
+def test_compute_policy():
+    print('\n')
+    v = value_iteration(P=P, nS=4, nA=4)[0]
+    policy = extract_policy(P=P, nS=4, nA=4, v=v)
+    print(compute_policy_v(P=P, nS=4, nA=4, policy=policy, beta=1.0, tol=1e-8))
+
 
 # Problem 4
 def policy_iteration(P, nS, nA, beta=1, tol=1e-8, maxiter=200):
@@ -105,6 +167,7 @@ def policy_iteration(P, nS, nA, beta=1, tol=1e-8, maxiter=200):
     """
     raise NotImplementedError("Problem 4 Incomplete")
 
+
 # Problem 5 and 6
 def frozen_lake(basic_case=True, M=1000, render=False):
     """ Finds the optimal policy to solve the FrozenLake problem
@@ -122,6 +185,7 @@ def frozen_lake(basic_case=True, M=1000, render=False):
     pi_total_rewards (float): The mean expected value for following the policy iteration optimal policy.
     """
     raise NotImplementedError("Problem 5 Incomplete")
+
 
 # Problem 6
 def run_simulation(env, policy, render=True, beta = 1.0):
