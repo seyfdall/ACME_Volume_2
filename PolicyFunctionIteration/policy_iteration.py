@@ -6,6 +6,8 @@
 """
 
 import numpy as np
+import gym
+from gym import wrappers
 
 # Intialize P for test example
 #Left =0
@@ -134,17 +136,29 @@ def compute_policy_v(P, nS, nA, policy, beta=1.0, tol=1e-8):
         v (ndarray): The discrete values for the true value function.
     """
     # Define values
-    values = np.zeros(nS)
-    for s in range(nS):
-        pass
+    V_olds = np.zeros(nS)
+    V_new = np.ones(nS)
+
+    # Iterate until Values found
+    while np.linalg.norm(V_new - V_olds) > tol:
+        V_olds = V_new.copy()
+        for s in range(nS):
+            # Optimal action already known so
+            # maximizing for loop not needed
+            tuple_info = P[s][policy[s]][0]
+            p, s_, u, _ = tuple_info
+            V_new[s] = (p * (u + beta * V_olds[s_]))
+
+    return V_new
 
 
 # Test Problem 3
 def test_compute_policy():
     print('\n')
     v = value_iteration(P=P, nS=4, nA=4)[0]
+    print(f'Original Value: {v}\n')
     policy = extract_policy(P=P, nS=4, nA=4, v=v)
-    print(compute_policy_v(P=P, nS=4, nA=4, policy=policy, beta=1.0, tol=1e-8))
+    print(f'Recomputed Value: {compute_policy_v(P=P, nS=4, nA=4, policy=policy, beta=1.0, tol=1e-8)}')
 
 
 # Problem 4
@@ -165,7 +179,39 @@ def policy_iteration(P, nS, nA, beta=1, tol=1e-8, maxiter=200):
         policy (ndarray): which direction to move in each square.
         n (int): number of iterations
     """
-    raise NotImplementedError("Problem 4 Incomplete")
+    # Initialize policy with common choice
+    p_new = np.ones(nS)
+    v_new = np.ones(nS)
+    k = 0
+
+    # Iterate up to maxiter times to find optimal policy
+    for k in range(maxiter):
+        # Evaluate policy and improve upon it
+        v_k = compute_policy_v(P, nS, nA, p_new, beta, tol)
+        p_k = extract_policy(P, nS, nA, v_k, beta)
+
+        # If policy is close enough return
+        if np.linalg.norm(p_k - p_new) < tol:
+            p_new = p_k
+            v_new = v_k
+            break
+
+        p_new = p_k.copy()
+
+    return v_new, p_new, k
+
+
+# Test Problem 4
+def test_policy_iteration():
+    print('\n')
+    print(f'Value Iteration: {value_iteration(P=P, nS=4, nA=4, beta=1)}')
+    print('\n')
+    v = value_iteration(P=P, nS=4, nA=4)[0]
+    print(f'Extract Policy: {extract_policy(P=P, nS=4, nA=4, v=v)}')
+    v_new, p_new = policy_iteration(P=P, nS=4, nA=4)
+    print('\n')
+    print(f'v_new {v_new}\n')
+    print(f'p_new {p_new}\n')
 
 
 # Problem 5 and 6
@@ -184,7 +230,39 @@ def frozen_lake(basic_case=True, M=1000, render=False):
     pi_policy (ndarray): The optimal policy for policy iteration.
     pi_total_rewards (float): The mean expected value for following the policy iteration optimal policy.
     """
-    raise NotImplementedError("Problem 5 Incomplete")
+    # Make environment for 4x4 scenario or 8x8 as appropriate
+    env_name = 'FrozenLake8x8-v1'
+    if basic_case:
+        env_name = 'FrozenLake-v1'
+    env = gym.make(env_name).env
+
+    # Put environment in starting state
+    obs = env.reset()
+
+    # Find number of states and actions
+    number_of_states = env.observation_space.n
+    number_of_actions = env.action_space.n
+
+    # Get the dictionary with all the states and actions
+    dictionary_P = env.env.env.P
+
+    # Compute policy and rewards via value iteration
+    vi_policy = extract_policy(dictionary_P, number_of_states, number_of_actions,
+                               value_iteration(dictionary_P, number_of_states, number_of_actions)[0])
+    vi_total_rewards = np.mean(compute_policy_v(dictionary_P, number_of_states, number_of_actions, vi_policy))
+
+    # Compute value, policy, and rewards via policy iteration
+    pi_value_func, pi_policy, k = policy_iteration(dictionary_P, number_of_states, number_of_actions)
+    pi_total_rewards = np.mean(pi_value_func)
+
+    env.close()
+
+    return vi_policy, vi_total_rewards, pi_value_func, pi_policy, pi_total_rewards
+
+
+# Test Problem 5
+def test_frozen_lake():
+    print(frozen_lake(True, 1))
 
 
 # Problem 6
@@ -201,3 +279,8 @@ def run_simulation(env, policy, render=True, beta = 1.0):
     total reward (float): Value of the total reward received under policy.
     """
     raise NotImplementedError("Problem 6 Incomplete")
+
+
+# Test Problem 6
+def test_run_simulation():
+
