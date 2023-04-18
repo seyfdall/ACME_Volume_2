@@ -248,30 +248,31 @@ def frozen_lake(basic_case=True, M=1000, render=False):
     obs = env.reset()
 
     # Find number of states and actions
-    number_of_states = env.observation_space.n
-    number_of_actions = env.action_space.n
+    nS = env.observation_space.n
+    nA = env.action_space.n
 
     # Get the dictionary with all the states and actions
-    dictionary_P = env.env.env.P
+    P = env.P
 
-    # Compute policy and rewards via value iteration
-    vi_policy = extract_policy(dictionary_P, number_of_states, number_of_actions,
-                               value_iteration(dictionary_P, number_of_states, number_of_actions)[0])
-    vi_total_rewards = compute_policy_v(dictionary_P, number_of_states, number_of_actions, vi_policy)
+    # Compute policy via value iteration
+    vi_policy = extract_policy(P, nS, nA, value_iteration(P, nS, nA)[0])
 
     # Compute value, policy, and rewards via policy iteration
-    pi_value_func, pi_policy, k = policy_iteration(dictionary_P, number_of_states, number_of_actions)
-    pi_total_rewards = np.mean(pi_value_func)
+    pi_value_func, pi_policy, k = policy_iteration(P, nS, nA)
+
+    # Get rewards for policies
+    value_reward = []
+    policy_reward = []
+    for i in range(M):
+        value_reward.append(run_simulation(env, vi_policy, render))
+        policy_reward.append(run_simulation(env, pi_policy, render))
+
+    value_mean = np.mean(value_reward)
+    policy_mean = np.mean(policy_reward)
 
     env.close()
 
-    return vi_policy, vi_total_rewards, pi_value_func, pi_policy, pi_total_rewards
-
-
-# Test Problem 5
-def test_frozen_lake():
-    print('\n')
-    print(frozen_lake())
+    return vi_policy, value_mean, pi_value_func, pi_policy, policy_mean
 
 
 # Problem 6
@@ -287,9 +288,25 @@ def run_simulation(env, policy, render=True, beta = 1.0):
     Returns:
     total reward (float): Value of the total reward received under policy.
     """
-    raise NotImplementedError("Problem 6 Incomplete")
+    done = False
+    total_reward = 0
+    obs = env.reset()[0]
+    k = 1
+
+    # Cycle to find total reward then return it
+    while not done:
+        obs, reward, done, _, _ = env.step(int(policy[obs]))
+        total_reward += reward * beta**k
+        k += 1
+
+        if render:
+            env.render()
+
+    return total_reward
 
 
-# Test Problem 6
-def test_run_simulation():
-    pass
+# Test Problem 5 & 6
+def test_frozen_lake():
+    print('\n')
+    print(frozen_lake(M=1, render=True))
+
