@@ -97,7 +97,7 @@ def extract_policy(P, nS, nA, v, beta = 1.0):
         policy (ndarray): which direction to move in from each square.
     """
     # Initialize policy vector
-    policy = np.zeros(nS)
+    policy = np.zeros(nS, dtype=int)
     for s in range(nS):
         sa_vector = np.zeros(nA)
         for a in range(nA):
@@ -142,12 +142,20 @@ def compute_policy_v(P, nS, nA, policy, beta=1.0, tol=1e-8):
     # Iterate until Values found
     while np.linalg.norm(V_new - V_olds) > tol:
         V_olds = V_new.copy()
+
         for s in range(nS):
             # Optimal action already known so
             # maximizing for loop not needed
-            tuple_info = P[s][policy[s]][0]
-            p, s_, u, _ = tuple_info
-            V_new[s] = (p * (u + beta * V_olds[s_]))
+            a = policy[s]
+            sa_value = 0
+
+            # Cycle through each action's potential outcome
+            for tuple_info in P[s][a]:
+                p, s_, u, _ = tuple_info
+                sa_value += (p * (u + beta * V_olds[s_]))
+
+            # Record value in function
+            V_new[s] = sa_value
 
     return V_new
 
@@ -180,8 +188,8 @@ def policy_iteration(P, nS, nA, beta=1, tol=1e-8, maxiter=200):
         n (int): number of iterations
     """
     # Initialize policy with common choice
-    p_new = np.ones(nS)
-    v_new = np.ones(nS)
+    p_new = np.random.choice(nA, size=nS)
+    v_new = p_new.copy()
     k = 0
 
     # Iterate up to maxiter times to find optimal policy
@@ -249,7 +257,7 @@ def frozen_lake(basic_case=True, M=1000, render=False):
     # Compute policy and rewards via value iteration
     vi_policy = extract_policy(dictionary_P, number_of_states, number_of_actions,
                                value_iteration(dictionary_P, number_of_states, number_of_actions)[0])
-    vi_total_rewards = np.mean(compute_policy_v(dictionary_P, number_of_states, number_of_actions, vi_policy))
+    vi_total_rewards = compute_policy_v(dictionary_P, number_of_states, number_of_actions, vi_policy)
 
     # Compute value, policy, and rewards via policy iteration
     pi_value_func, pi_policy, k = policy_iteration(dictionary_P, number_of_states, number_of_actions)
@@ -262,7 +270,8 @@ def frozen_lake(basic_case=True, M=1000, render=False):
 
 # Test Problem 5
 def test_frozen_lake():
-    print(frozen_lake(True, 1))
+    print('\n')
+    print(frozen_lake())
 
 
 # Problem 6
