@@ -149,8 +149,34 @@ def nonlinear_conjugate_gradient(f, df, x0, tol=1e-5, maxiter=10000):
 def test_nonlinear_conjugate_gradient():
     # rosen = lambda x: (1 - x[0])**2 + 100 * (x[1] - x[0]**2)**2
     # rosen_der = lambda x: np.array([202*x[0] - 200*x[1] - 2,-200*x[0] + 200 * x[1]])
-    print(opt.fmin_cg(opt.rosen, np.array([10, 10]), fprime=opt.rosen_der))
-    print(nonlinear_conjugate_gradient(opt.rosen, opt.rosen_der, np.array([10, 10])))
+    print('\n')
+    print(opt.fmin_cg(opt.rosen, np.array([2, 2]), fprime=opt.rosen_der))
+    print(nonlinear_conjugate_gradient(opt.rosen, opt.rosen_der, np.array([2, 2])))
+
+    def f(x):
+        Q = np.array([
+            [1, 2, 3, 4, 5],
+            [2, 10, 6, 7, 8],
+            [3, 6, 15, 9, 10],
+            [4, 7, 9, 20, 11],
+            [5, 8, 10, 11, 25]
+        ])
+        b = np.array([0, 0, 0, 0, 0])
+        return x @ Q @ x / 2 - b @ x
+
+    def df(x):
+        Q = np.array([
+            [1, 2, 3, 4, 5],
+            [2, 10, 6, 7, 8],
+            [3, 6, 15, 9, 10],
+            [4, 7, 9, 20, 11],
+            [5, 8, 10, 11, 25]
+        ])
+        b = np.array([0, 0, 0, 0, 0])
+        return x @ Q - b.T
+
+    print(opt.fmin_cg(f, np.array([2, 2, 2, 2, 2]), fprime=df))
+    # print(nonlinear_conjugate_gradient(f, df, np.array([2, 2, 2, 2, 2])))
 
 
 # Problem 4
