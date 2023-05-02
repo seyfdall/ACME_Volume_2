@@ -266,4 +266,4 @@ def prob7(n):
 # # The following callable objects are equivalent to f().
 # fpoly = np.polynomial.Polynomial(pcoeffs)
 # fcheb = np.polynomial.Chebyshev(ccoeffs)
-# prob7(200)
+# prob7(10)

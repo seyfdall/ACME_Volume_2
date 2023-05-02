@@ -113,7 +113,7 @@ def get_consumption(N, u=lambda x: np.sqrt(x)):
 
 # Define test for problem 3
 def test_get_consumption():
-    C = get_consumption(N=4, u=lambda x: x)
+    C = get_consumption(N=4, u=lambda x: np.sqrt(x))
     print('\n')
     print(C)
 
@@ -169,7 +169,11 @@ def eat_cake(T, N, B, u=lambda x: np.sqrt(x)):
 
 # Test problem 4-6
 def test_eat_cake():
-    eat_cake(T=3, N=4, B=0.9, u=lambda x: np.sqrt(x))
+    A, P = eat_cake(T=3, N=4, B=0.9, u=lambda x: np.sqrt(x))
+    print('\n')
+    print(A)
+    print('\n')
+    print(P)
 
 
 # Problem 7
@@ -203,4 +207,10 @@ def find_policy(T, N, B, u=np.sqrt):
 
 # Test problem 7
 def test_find_policy():
+    print('\n')
     print(find_policy(T=3, N=4, B=0.9, u=lambda x: np.sqrt(x)))
+
+
+def test():
+    x = np.array([1,2,10,14,4,2])
+    print(np.argmax(x))

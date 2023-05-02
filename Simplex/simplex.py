@@ -97,7 +97,7 @@ class SimplexSolver(object):
         negative elementary vector.
         """
         # Find where pivot is in array
-        col_index = int(self._pivot_col())
+        col_index = self._pivot_col()
         row_index = self._pivot_row(col_index)
 
         # Divide pivot row by abs(pivot)
@@ -106,8 +106,8 @@ class SimplexSolver(object):
         # Simplify matrix by zeroing out pivot column with row operations
         for i in range(len(self.dictionary)):
             if i != row_index:
-                self.dictionary[i] += self.dictionary[row_index] * self.dictionary[i, col_index]
-                # self.dictionary[i] = self.dictionary[i] - self.dictionary[i, col_index] / self.dictionary[row_index, col_index] * self.dictionary[row_index, :]
+                # self.dictionary[i] += self.dictionary[row_index] * self.dictionary[i, col_index]
+                self.dictionary[i] = self.dictionary[i] - self.dictionary[i, col_index] / self.dictionary[row_index, col_index] * self.dictionary[row_index, :]
 
     # Problem 5
     def solve(self):

@@ -266,5 +266,6 @@ def test_prob_4():
 def test_prob_6():
     yoda = SentenceGenerator("yoda.txt")
     print("\n")
-    print(yoda.babble())
+    for _ in range(5):
+        print(yoda.babble())
 

@@ -57,7 +57,7 @@ class GaussianQuadrature:
 
         # Construct Legendre
         if self.polytype == "legendre":
-            b_k = np.sqrt(np.array([k**2 / (4*k**2 - 1) for k in range(1, n)]))
+            b_k = np.sqrt([k**2 / (4*k**2 - 1) for k in range(1, n)])
             weight_value = 2
 
         # Construct Chebyshev
@@ -118,15 +118,19 @@ class GaussianQuadrature:
 
         # Define h(x,y)
         h = lambda x, y: f((b1 - a1) / 2 * x + (a1 + b1) / 2, (b2 - a2) / 2 * y + (a2 + b2) / 2)
+        g = lambda x, y: h(x, y) * self.reciprocal(x) * self.reciprocal(y)
         sum = 0
 
         # Using (10.5) to compute the integral approximation
         for i in range(len(self.points)):
             for j in range(len(self.points)):
-                sum += self.weights[i] * self.weights[j] * h(self.points[i], self.points[j]) * \
-                       self.reciprocal(self.points[i]) * self.reciprocal(self.points[j])
+                sum += self.weights[i] * self.weights[j] * g(self.points[i], self.points[j])
         return coeff * sum
-    
+
+test = GaussianQuadrature(4)
+f = lambda x, y: np.sin(x) + np.cos(y)
+print(test.integrate2d(f, -10, 10, -1, 1))
+
 
 # Problem 5
 def prob5():
@@ -156,6 +160,8 @@ def prob5():
         # Approximate F using Legendre polynomials
         leg = GaussianQuadrature(n, "legendre")
         leg_value = leg.integrate(f, a, b)
+        print(F)
+        print(leg_value)
         legendre_error.append(abs(F - leg_value))
 
         # Approximate F using Chebyshev polynomials
@@ -163,6 +169,7 @@ def prob5():
         cheb_value = cheb.integrate(f, a, b)
         chebyshev_error.append(abs(F - cheb_value))
 
+    print(legendre_error)
     # Plot the errors
     plt.yscale("log")
     plt.xlabel("n")
@@ -174,8 +181,5 @@ def prob5():
     plt.title("Problem 5")
     plt.tight_layout()
     plt.show()
-
-
-
 
 
